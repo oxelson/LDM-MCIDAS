@@ -1,0 +1,59 @@
+# This file contains a template that can be used to customize the
+# configuation process performed by the `./configure' script through the
+# setting of environment variables.  The commented examples below are for
+# POSIX.2-compatible shells (e.g. `sh', `ksh', `bash').  Uncommented values
+# given to variables in this file will override their default values.
+#
+# You can also customize the configuration process via the environment
+# variables seen by ./configure.  For example:
+#
+#     For `csh'-compatible shells:
+#
+#	  % setenv CC cc
+#	  % setenv CFLAGS -g
+#	  % ./configure
+#
+#     For POSIX.2-compatible shells (e.g `sh', `ksh', `bash'):
+#
+#	  $ CC=cc CFLAGS=-g FC=gfortran ./configure
+#         etc.
+#
+# NB: Variable assignments in this file override ones set in the environment.
+#
+#############################################################################
+#
+# C compiler:
+# CC='gcc'
+#
+# C compiler flags:
+# CFLAGS=-g
+#
+# C preprocessor flags:
+# CPPFLAGS=-DDEBUG
+#
+# Fortran compiler
+# FC=gfortran
+# LD_FORTRAN='-static -lf2c'
+#
+# LDM 6.10+
+# CPP_LDM=-I/usr/local/ldm/include
+# LD_LDM='/home/ldm/lib/libldm.a /home/ldm/lib/libxml2.a'
+#
+# McIDAS package references:
+# CPP_MCIDAS=-I/home/mcidas/mcidas<ver>/src
+# LD_MCIDAS='-L/home/mcidas/lib -lmcidas'
+#
+# netCDF 4
+# CPP_NETCDF='-I/home/mcidas/mcidas<ver>/netcdf/libsrc'
+# LD_NETCDF='-L/home/mcidas/lib -lnetcdf'
+#
+# System libraries
+# LD_MATH='-lm'
+# LD_X11=''
+#
+# Installation prefix (it's best to use an absolute pathname):
+# prefix=/usr/local/unidata
+#
+# Location for source and binary gzip-compressed tar files
+# FTPDIR=/usr/local/ldm/ldm-mcidas/ftp
+# FTPBINDIR=/usr/local/ldm/ldm-mcidas/ftpbin

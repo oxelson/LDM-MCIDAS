@@ -1,0 +1,82 @@
+# This is the makefile for the zlib stuff
+#
+
+HEADERS	= deflate.h \
+		  infblock.h \
+		  infcodes.h \
+		  inffast.h \
+		  inffixed.h \
+		  inftrees.h \
+		  infutil.h \
+		  trees.h \
+		  zconf.h \
+		  zlib.h \
+		  zutil.h
+
+MANIFEST= Makefile.in \
+		  adler32.c \
+		  compress.c \
+		  crc32.c \
+		  deflate.c \
+		  deflate.h \
+		  gzio.c \
+		  infblock.c \
+		  infblock.h \
+		  infcodes.c \
+		  infcodes.h \
+		  inffast.c \
+		  inffast.h \
+		  inffixed.h \
+		  inflate.c \
+		  inftrees.c \
+		  inftrees.h \
+		  infutil.c \
+		  infutil.h \
+		  trees.c \
+		  trees.h \
+		  uncompr.c \
+		  zconf.h \
+		  zlib.h \
+		  zutil.c \
+		  zutil.h
+
+LIBOBJS = adler32.o \
+		  compress.o \
+		  crc32.o \
+		  deflate.o \
+		  gzio.o \
+		  infblock.o \
+		  infcodes.o \
+		  inffast.o \
+		  inflate.o \
+		  inftrees.o \
+		  infutil.o \
+		  trees.o \
+		  uncompr.o \
+		  zutil.o
+
+all:	  libz.a
+
+install:	$(LIBOBJS)
+	$(MAKE) $(MFLAGS) $(LIBDIR) LIBDIR=$(LIBDIR)
+	$(AR) rcuv $(LIBDIR)/libz.a $(LIBOBJS)
+	$(RANLIB) $(LIBDIR)/libz.a
+
+libz.a: $(LIBOBJS) 
+	$(AR) rcuv $@ $(LIBOBJS)
+	-@ ($(RANLIB) $@ || true) >/dev/null 2>&1
+
+distclean: default_distclean
+
+clean: default_clean
+
+include ../port/master.mk
+
+# Special rule for infcodes.c -- make sure it does not get compiled with
+# optimization turned on
+
+#infcodes.o:	infcodes.c zutil.h inftrees.h infblock.h infcodes.h infutil.h inffast.h
+#	$(CC) -c $(CPPFLAGS) $<
+
+### Everything after the following line might be overwritten ###
+### DO NOT DELETE THIS LINE.  make depend DEPENDS ON IT ###

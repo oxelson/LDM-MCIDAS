@@ -1,0 +1,967 @@
+# Makefile for the Unidata McIDAS LDM ingester daemon.
+#
+# $Id: Makefile.in,v 1.45 2000/05/11 19:23:24 yoksas Exp $
+
+RM			= rm -f
+
+PROGRAMS_C	=            \
+		area2png         \
+		pnga2area        \
+		zlibg2gini       \
+		pngg2gini        \
+		proftomd         \
+		lgt2md
+
+PROGRAMS_CF	=            \
+		nldn2md
+
+PROGRAMS_OLD	=        \
+		cdftomd          \
+		gunrv2           \
+		ldm_pipe_exec    \
+		lwfile           \
+		lwtmd2           \
+		lwtoa3           \
+		nids2area
+
+PROGRAMS_ALL	=        \
+		$(PROGRAMS_C)    \
+		$(PROGRAMS_CF)   \
+		$(PROGRAMS_OLD)
+
+BINFILES_C	=            \
+		$(PROGRAMS_C)    \
+		batch.k          \
+		uwgrid.sh
+
+BINFILES_CF	=            \
+		$(PROGRAMS_CF)   \
+
+BINFILES	=            \
+		$(BINFILES_C)
+
+BINFILES_ALL	=        \
+		$(BINFILES_C)    \
+		$(PROGRAMS_CF)   \
+		$(PROGRAMS_OLD)
+
+headers		=            \
+		alarm.h          \
+		lightning.h      \
+		mc_proto.h       \
+		mkdirs_open.h    \
+		profiler.h       \
+		wsi.h
+
+sources		=            \
+		alarm.c          \
+		area2png.c       \
+		cdfsubs.c        \
+		cdftomd.c        \
+		commonsubs.c     \
+		csubs.c          \
+		decode_fsl1.c    \
+		decode_fsl2.c    \
+		decode_lgt.c     \
+		decode_ncprof.c  \
+		ginisubs.c       \
+		gunrv2.c         \
+		imgsubs.c        \
+		ldm_pipe_exec.sh \
+		lgt2md.c         \
+		lwfile.c         \
+		lwtmd2.c         \
+		lwtoa3.c         \
+		main.c           \
+		mcmain.c         \
+		mc_proto.c       \
+		mkdirs_open.c    \
+		nids2area.f      \
+		nids_inflate.c   \
+		nldn_xdr.c       \
+		nldn2md.f        \
+		nldninput.c      \
+		nldninput_cf.c   \
+		pnga2area.c      \
+		pngg2gini.c      \
+		pngsubs.c        \
+		proftomd.c       \
+		readit.c         \
+		readpng.c        \
+		rtesubs.c        \
+		vapor_pres.c     \
+		wsiinput.c       \
+		zlibg2gini.c     \
+		zlibsubs.c
+
+MANUALS_C	=            \
+		area2png.1       \
+		pnga2area.1      \
+		pngg2gini.1      \
+		zlibg2gini.1     \
+		proftomd.1       \
+		lgt2md.1
+
+MANUALS_CF	=            \
+		nldn2md.1
+
+MANUALS	=                \
+	$(MANUALS_C)         \
+	$(MANUALS_CF)
+
+MANUALS_OLD	=            \
+		cdftomd.1        \
+		gunrv2.1         \
+		lwfile.1         \
+		lwtmd2.1         \
+		lwtoa3.1         \
+		nids2area.1
+
+MANUALS_ALL		=        \
+		$(MANUALS_C)     \
+		$(MANUALS_CF)    \
+		$(MANUALS_OLD)
+
+ETCFILES	=            \
+		ROUTE.SYS        \
+		SATANNOT         \
+		SATBAND          \
+		SCHEMA           \
+		SYSKEY.TAB       \
+		ldm-mcidas-pqact.conf.hourly    \
+		ldm-mcidas-pqact.conf.all       \
+		ldm-mcidas-pqact.conf.obsolete
+
+cpp_netcdf	= @CPP_NETCDF@
+ld_netcdf	= @LD_NETCDF@
+ld_ldm		= @LD_LDM@
+ld_x11		= @LD_X11@
+ld_mcidas	= @LD_MCIDAS@
+ld_udport	= ../port/misc/libudport.a
+ld_rpc		= @LD_RPC@
+ld_socket	= @LD_SOCKET@
+ld_math		= @LD_MATH@
+ld_fortran	= @LD_FORTRAN@
+ld_dl		= @LD_DL@
+ld_png      = -L../libpng -lpng
+ld_zlib     = -L../zlib -lz
+CLIBS		=            \
+		$(ld_ldm)        \
+		$(ld_x11)        \
+		$(ld_udport)     \
+		$(ld_netcdf)     \
+		$(ld_png)        \
+		$(ld_zlib)       \
+		$(ld_rpc)        \
+		$(ld_socket)     \
+		$(ld_dl)         \
+		$(ld_math)
+MLIBS		=            \
+		$(CLIBS)         \
+		$(ld_mcidas)
+FLIBS		=            \
+		$(MLIBS)         \
+		$(ld_fortran)
+
+common_objs	=            \
+		main.o           \
+		mc_proto.o       \
+		csubs.o          \
+		udalloc.o
+
+profiler_objs =          \
+		cdfsubs.o        \
+		rtesubs.o        \
+		commonsubs.o     \
+		decode_fsl1.o    \
+		decode_fsl2.o    \
+		decode_ncprof.o  \
+		mkdirs_open.o    \
+		vapor_pres.o
+
+cpp_mcidas	= @CPP_MCIDAS@
+cpp_ldm		= @CPP_LDM@
+cpp_png		= -I../libpng
+cpp_port	= -I../port/misc -I../port/cfortran
+cpp_zlib	= -I../zlib
+CPPFLAGS	=            \
+		$(cpp_ldm)       \
+		$(cpp_mcidas)    \
+		$(cpp_netcdf)    \
+		$(cpp_png)       \
+		$(cpp_port)      \
+		$(cpp_zlib)      \
+		@CPPFLAGS@
+CFLAGS		= @CFLAGS@
+FFLAGS		= @FFLAGS@
+LDFLAGS		= @LDFLAGS@
+links		= udalloc.c
+
+GARBAGE		=            \
+		$(links)         \
+		$(PROGRAMS_ALL)  \
+		AREA*            \
+		GRID*            \
+		MDXX*            \
+		PROFILER.*       \
+		ROUTE.SYS        \
+		SYSKEY.TAB
+
+test_files	=                  \
+		  19982991906.nc       \
+		  19982992000.nc       \
+		  9912406.nldn         \
+		  bref1.raw            \
+		  bref2.raw            \
+		  bref3.raw            \
+		  bref4.raw            \
+		  brlr1.raw            \
+		  cref.raw             \
+		  DCBPRO               \
+		  DCNLDN               \
+		  DCWPRO               \
+		  gunrv2.f0            \
+		  lref1.raw            \
+		  lref2.raw            \
+		  lref3.raw            \
+		  lwfile.f0            \
+		  lwtmd2.f0            \
+		  lwtoa3.f0            \
+		  napln1ex_20080918.21 \
+		  pngarea              \
+		  pnggini              \
+		  pre1.raw             \
+		  pre3.raw             \
+		  pret.raw             \
+		  profiler.cdf         \
+		  route.sys.dist       \
+		  SATANNOT             \
+		  SATBAND              \
+		  SCHEMA               \
+		  srmv1.raw            \
+		  srmv2.raw            \
+		  syskey.tab.dist      \
+		  tops.raw             \
+		  uspln1ex_20080918.15 \
+		  vel1.raw             \
+		  vel2.raw             \
+		  vel3.raw             \
+		  vel4.raw             \
+		  vil.raw              \
+		  zlibgini
+
+MANIFEST	=                  \
+		  $(headers)           \
+		  $(MANUALS_ALL)       \
+		  $(sources)           \
+		  $(test_files)        \
+		  batch.k              \
+		  cdfconvert           \
+		  depend               \
+		  ldm-mcidas-pqact.conf.hourly   \
+		  ldm-mcidas-pqact.conf.all      \
+		  ldm-mcidas-pqact.conf.obsolete \
+		  Makefile.in          \
+		  route.sys.dist       \
+		  syskey.tab.dist      \
+		  uwgrid.sh
+
+AREA2PNG	= ./area2png
+LGT2MD		= ./lgt2md
+NLDN2MD		= ./nldn2md
+PNGA2AREA	= ./pnga2area
+PNGG2GINI	= ./pngg2gini
+PROFTOMD	= ./proftomd
+ZLIBG2GINI	= ./zlibg2gini
+
+CDFTOMD		= ./cdftomd
+LWTOA3		= ./lwtoa3
+LWFILE		= ./lwfile
+GUNRV2		= ./gunrv2
+LWTMD2		= ./lwtmd2
+NIDS		= ./nids2area
+READIT		= ./readit
+
+basic:		links $(PROGRAMS_C)
+
+full:		basic $(PROGRAMS_CF)
+
+all:		full $(PROGRAMS_OLD)
+
+depend:		links
+
+install:	               \
+		installed_binfiles \
+		installed_etcfiles \
+		installed_manuals
+
+test:	\
+		SYSKEY.TAB       \
+		pnga2area.test   \
+		zlibg2gini.test  \
+		pngg2gini.test   \
+		proftomd1.test   \
+		proftomd2.test   \
+		lgt2md.test
+
+test_all:	\
+		test             \
+		nldn2md.test     \
+		lwtoa3.test      \
+		bref1.test       \
+		bref2.test       \
+		bref3.test       \
+		bref4.test       \
+		brlr1.test       \
+		cref.test        \
+		lref1.test       \
+		lref2.test       \
+		lref3.test       \
+		pre1.test        \
+		pre3.test        \
+		pret.test        \
+		tops.test        \
+		vel1.test        \
+		vel2.test        \
+		vel3.test        \
+		vel4.test        \
+		vil.test         \
+		srmv1.test       \
+		srmv2.test
+
+distclean:	default_distclean
+	$(RM) $(links)
+
+uninstall:
+	cd $(BINDIR); $(RM) $(BINFILES_ALL)
+	cd $(ETCDIR); $(RM) $(ETCFILES)
+	cd $(LIBDIR); $(RM) libudport.a
+	cd $(MANDIR); $(RM) windex
+	cd $(MANDIR)/man1; $(RM) $(MANUALS)
+	$(RM) $(FTPBINDIR)/ldm-mcidas-$(VERSION).tar.gz
+	$(RM) $(FTPDIR)/ldm-mcidas-$(VERSION).tar.gz
+
+
+# We make the following two files to prevent linktree(1) shadow directories
+# from interfering with one another (provided the linktree(1) is performed
+# after a `make distclean').
+#
+ROUTE.SYS:	route.sys.dist
+	cp $? $@
+
+SYSKEY.TAB:	syskey.tab.dist
+	cp $? $@
+
+lwfile.test:	$(LWFILE) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) PROFILER.CDF
+	$(LWFILE) -d `pwd` -l- < lwfile.f0
+	@if test ! -f PROFILER.CDF; then \
+	    echo 2>&1 "***** Profiler file not created *****"; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "LWFILE test successful"
+
+lwtmd2.test:	$(LWTMD2) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) MDXX0004;
+	$(LWTMD2) -d `pwd` -l- < lwtmd2.f0
+	@if test ! -f MDXX0004; then \
+	    echo 2>&1 "***** MD file not created *****"; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "LWTMD2 test successful"
+
+gunrv2.test:	$(GUNRV2) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) GRID0001 GRID0002;
+	$(GUNRV2) -d `pwd` -l- < gunrv2.f0
+	@if test ! -f GRID0001; then \
+	    echo 2>&1 "***** First grid file not created *****"; \
+	    exit 1; \
+	fi
+	./$(GUNRV2) -d `pwd` -l- < gunrv2.f0
+	@if test ! -f GRID0002; then \
+	    echo 2>&1 '***** Second (different) grid file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "GUNRV2 test successful"
+
+lwtoa3.test:	$(LWTOA3) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) AREA1400
+	$(LWTOA3) -d `pwd` -l- < lwtoa3.f0
+	@if test ! -f AREA1400; then \
+	    echo 2>&1 "***** First WetNet area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA1401
+	$(LWTOA3) -d `pwd` -l- < lwtoa3.f0
+	@if test ! -f AREA1401; then \
+	    echo 2>&1 '***** Second WetNet area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "LWTOA3 test successful"
+
+bref1.test:	$(NIDS) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R1 X X < bref1.raw
+	@if test ! -f AREA0300; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0301
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R1 X X < bref1.raw
+	@if test ! -f AREA0301; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "BREF1 test successful"
+
+bref2.test:	$(NIDS) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) AREA0340
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R2 X X < bref2.raw
+	@if test ! -f AREA0340; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0341
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R2 X X < bref2.raw
+	@if test ! -f AREA0341; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "BREF2 test successful"
+
+bref3.test:	$(NIDS) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) AREA0380
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R3 X X < bref3.raw
+	@if test ! -f AREA0380; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0381
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R3 X X < bref3.raw
+	@if test ! -f AREA0381; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "BREF3 test successful"
+
+bref4.test:	$(NIDS) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) AREA0420
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R4 X X < bref4.raw
+	@if test ! -f AREA0420; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0421
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R4 X X < bref4.raw
+	@if test ! -f AREA0421; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "BREF4 test successful"
+
+brlr1.test:	$(NIDS) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) AREA0980
+	$(NIDS) -d `pwd` -l- 8000 BUF DIALPROD=RI X X < brlr1.raw
+	@if test ! -f AREA0980; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0981
+	$(NIDS) -d `pwd` -l- 8000 BUF DIALPROD=RI X X < brlr1.raw
+	@if test ! -f AREA0981; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "BRLR1 test successful"
+
+cdftomd.test:	$(CDFTOMD) FORCE
+	@case "$(ld_netcdf)" in \
+	  "") echo 1>&2 Not making $@ because you did not define LD_NETCDF ;; \
+	  *) cp route.sys.dist ROUTE.SYS ; \
+		 $(RM) MDXX0084 ; \
+	     set -x; \
+	     $(CDFTOMD) -d `pwd` -vl- U4 profiler.cdf 81 || exit 1; \
+	     set +x; \
+	     if test ! -f MDXX0084; then \
+	         echo 2>&1 "***** MD file not created *****"; \
+	         exit 1; \
+	     fi ; \
+	     echo 2>&1 "CDFTOMD test successful" ;; \
+	esac
+
+cref.test:	$(NIDS) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) AREA0460
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R5 X X < cref.raw
+	@if test ! -f AREA0460; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0461
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R5 X X < cref.raw
+	@if test ! -f AREA0461; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "CREF test successful"
+
+lref1.test:	$(NIDS) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) AREA0500
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R6 X X < lref1.raw
+	@if test ! -f AREA0500; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0501
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R6 X X < lref1.raw
+	@if test ! -f AREA0501; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "LREF1 test successful"
+
+lref2.test:	$(NIDS) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) AREA0540
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R7 X X < lref2.raw
+	@if test ! -f AREA0540; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0541
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R7 X X < lref2.raw
+	@if test ! -f AREA0541; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "LREF2 test successful"
+
+lref3.test:	$(NIDS) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) AREA0580
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R8 X X < lref3.raw
+	@if test ! -f AREA0580; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0581
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R8 X X < lref3.raw
+	@if test ! -f AREA0581; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "LREF3 test successful"
+
+lgt2md.test:	$(LGT2MD) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) MDXX00122 MDXX0132;
+	$(LGT2MD) -d `pwd` -vl- 120 NLDN DIALPROD=LP X X  < uspln1ex_20080918.15
+	@if test ! -f MDXX0122; then \
+	    echo 2>&1 "***** MD file not created *****"; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "LGT2MD USPLN1EX test successful"
+	$(LGT2MD) -d `pwd` -vl- 130 NLDN DIALPROD=LX X X  < napln1ex_20080918.21
+	@if test ! -f MDXX0132; then \
+	    echo 2>&1 "***** MD file not created *****"; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "LGT2MD NAPLN1EX test successful"
+
+nldn2md.test:	$(NLDN2MD) FORCE
+	cp route.sys.dist ROUTE.SYS
+	$(RM) MDXX0074;
+	$(NLDN2MD) -d `pwd` -vl- 70 NLDN DIALPROD=LD X X  < 9912406.nldn
+	@if test ! -f MDXX0074; then \
+	    echo 2>&1 "***** MD file not created *****"; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "NLDN2MD test successful"
+
+pnga2area.test:	$(AREA2PNG) $(PNGA2AREA) FORCE
+	cp route.sys.dist ROUTE.SYS
+	cp syskey.tab.dist SYSKEY.TAB
+	$(RM) pngarea.test AREA0200;
+	$(PNGA2AREA) -vl- -a SATANNOT -b SATBAND -r U3 < pngarea
+	@if test ! -f AREA0200; then \
+	    echo 2>&1 "***** AREA file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0200;
+	$(PNGA2AREA) -vl- -a SATANNOT -b SATBAND -r ZZ,200 < pngarea
+	@if test ! -f AREA0200; then \
+	    echo 2>&1 "***** AREA file not created *****"; \
+	    exit 1; \
+	fi
+	$(AREA2PNG) -vl- -a SATANNOT -b SATBAND -f AREA0200 pngarea.test
+	@if test ! -f pngarea.test; then \
+	    echo 2>&1 "***** pngarea.test file not created *****"; \
+	    exit 1; \
+	fi
+	@if cmp -s pngarea pngarea.test; then \
+	    echo 2>&1 "PNGA2AREA test successful"; \
+    else \
+	    echo 2>&1 "***** pngarea.test differs from pngarea *****"; \
+	    exit 1; \
+	fi
+
+pngg2gini.test:	$(PNGG2GINI) FORCE
+	$(RM) pnggini.test;
+	$(PNGG2GINI) -vl- pnggini.test < pnggini
+	@if test ! -f pnggini.test; then \
+	    echo 2>&1 "***** GINI file not created *****"; \
+	    exit 1; \
+    else \
+	    echo 2>&1 "PNGG2GINI test successful"; \
+	fi
+
+pre1.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA0700
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RB X X < pre1.raw
+	@if test ! -f AREA0700; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0701
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RB X X < pre1.raw
+	@if test ! -f AREA0701; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "PRE1 test successful"
+
+pre3.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA0740
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RC X X < pre3.raw
+	@if test ! -f AREA0740; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0741
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RC X X < pre3.raw
+	@if test ! -f AREA0741; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "PRE3 test successful"
+
+pret.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA0780
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RD X X < pret.raw
+	@if test ! -f AREA0780; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0781
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RD X X < pret.raw
+	@if test ! -f AREA0781; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "PRET test successful"
+
+proftomd1.test:	$(PROFTOMD) SYSKEY.TAB FORCE
+	@case "$(ld_netcdf)" in \
+	  "") echo 1>&2 Not making $@ because you did not define LD_NETCDF ;; \
+	  *) cp route.sys ROUTE.SYS ; \
+		 $(RM) MDXX0089 ; \
+	     set -x; \
+	     $(PROFTOMD) -f 19982992000.nc -d `pwd` -vl- U2 WPRO 81 || exit 1; \
+	     set +x; \
+	     if test ! -f MDXX0089; then \
+	         echo 2>&1 "***** MD file not created *****"; \
+	         exit 1; \
+	     fi ; \
+	     echo 2>&1 "PROFTOMD hourly summary test successful" ;; \
+	esac
+
+proftomd2.test:	$(PROFTOMD) SYSKEY.TAB FORCE
+	@case "$(ld_netcdf)" in \
+	  "") echo 1>&2 Not making $@ because you did not define LD_NETCDF ;; \
+	  *) cp route.sys ROUTE.SYS ; \
+		 $(RM) MDXX0099 ; \
+	     set -x; \
+	     $(PROFTOMD) -f 19982991906.nc -d `pwd` -vl- U6 WPR6 91 || exit 1; \
+	     set +x; \
+	     if test ! -f MDXX0099; then \
+	         echo 2>&1 "***** MD file not created *****"; \
+	         exit 1; \
+	     fi ; \
+	     echo 2>&1 "PROFTOMD 6-minute test successful" ;; \
+	esac
+
+srmv1.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA1020
+	$(NIDS) -d `pwd` -l- 8000 CCX DIALPROD=RJ X X < srmv1.raw
+	@if test ! -f AREA1020; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA1021
+	$(NIDS) -d `pwd` -l- 8000 CCX DIALPROD=RJ X X < srmv1.raw
+	@if test ! -f AREA1021; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "SRMV1 test successful"
+
+srmv2.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA1060
+	$(NIDS) -d `pwd` -l- 8000 CCX DIALPROD=RK X X < srmv2.raw
+	@if test ! -f AREA1060; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA1061
+	$(NIDS) -d `pwd` -l- 8000 CCX DIALPROD=RK X X < srmv2.raw
+	@if test ! -f AREA1061; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "SRMV2 test successful"
+
+tops.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA0620
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R9 X X < tops.raw
+	@if test ! -f AREA0620; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0621
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=R9 X X < tops.raw
+	@if test ! -f AREA0621; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "TOPS test successful"
+
+vel1.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA0820
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RE X X < vel1.raw
+	@if test ! -f AREA0820; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0821
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RE X X < vel1.raw
+	@if test ! -f AREA0821; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "VEL1 test successful"
+
+vel2.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA0860
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RF X X < vel2.raw
+	@if test ! -f AREA0860; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0861
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RF X X < vel2.raw
+	@if test ! -f AREA0861; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "VEL2 test successful"
+
+vel3.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA0900
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RG X X < vel3.raw
+	@if test ! -f AREA0900; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0901
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RG X X < vel3.raw
+	@if test ! -f AREA0901; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "VEL3 test successful"
+
+vel4.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA0940
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RH X X < vel4.raw
+	@if test ! -f AREA0940; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0941
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RH X X < vel4.raw
+	@if test ! -f AREA0941; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "VEL4 test successful"
+
+vil.test:	$(NIDS) FORCE
+	cp route.sys ROUTE.SYS
+	$(RM) AREA0660
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RA X X < vil.raw
+	@if test ! -f AREA0660; then \
+	    echo 2>&1 "***** First NIDS area file not created *****"; \
+	    exit 1; \
+	fi
+	$(RM) AREA0661
+	$(NIDS) -d `pwd` -l- 8000 DAX DIALPROD=RA X X < vil.raw
+	@if test ! -f AREA0661; then \
+	    echo 2>&1 '***** Second NIDS area file not created *****'; \
+	    exit 1; \
+	fi
+	@echo 2>&1 "VIL test successful"
+
+zlibg2gini.test:	$(ZLIBG2GINI) FORCE
+	$(RM) zlibgini.test;
+	$(ZLIBG2GINI) -vl- zlibgini.test < zlibgini
+	@if test ! -f zlibgini.test; then \
+	    echo 2>&1 "***** GINI file not created *****"; \
+	    exit 1; \
+    else \
+	    echo 2>&1 "ZLIBG2GINI test successful"; \
+	fi
+
+links:		$(links)
+
+udalloc.c:
+	test -r $@ || ln -s ../port/misc/$@ $@
+inetutil.c:
+	test -r $@ || ln -s ../port/misc/$@ $@
+
+area2png:	alarm.o commonsubs.o imgsubs.o pngsubs.o rtesubs.o area2png.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ alarm.o commonsubs.o imgsubs.o pngsubs.o rtesubs.o area2png.o $(CLIBS) || ($(RM) $@; exit 1)
+
+lgt2md:	alarm.o lgt2md.o decode_lgt.o nldninput.o rtesubs.o commonsubs.o lightning.h
+	$(CC) $(CFLAGS) $(LDFLAGS) lgt2md.o alarm.o decode_lgt.o nldninput.o \
+	rtesubs.o commonsubs.o $(CLIBS) -o $@ || ($(RM) $@; exit 1)
+
+nldn2md:	alarm.o nldn2md.o mcmain.o nldninput_cf.o \
+		csubs.o udalloc.o
+	$(FC) $(FFLAGS) $(LDFLAGS) alarm.o nldn2md.o mcmain.o nldninput_cf.o \
+		csubs.o udalloc.o \
+		$(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+
+proftomd:	proftomd.o $(profiler_objs)
+	@case "$(ld_netcdf)" in \
+	  "") echo 1>&2 Not making $@ because you did not define LD_NETCDF ;; \
+	  *) set -x; $(CC) $(CFLAGS) $(LDFLAGS) proftomd.o $(profiler_objs) \
+		$(CLIBS) -o $@ || ($(RM) $@; exit 1) ;; \
+	esac
+
+pnga2area:	alarm.o commonsubs.o imgsubs.o pngsubs.o rtesubs.o pnga2area.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ alarm.o commonsubs.o imgsubs.o pngsubs.o rtesubs.o pnga2area.o $(CLIBS) || ($(RM) $@; exit 1)
+
+pngg2gini:	alarm.o commonsubs.o imgsubs.o pngsubs.o rtesubs.o pngg2gini.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ alarm.o commonsubs.o imgsubs.o pngsubs.o rtesubs.o pngg2gini.o $(CLIBS) || ($(RM) $@; exit 1)
+
+zlibg2gini:	alarm.o commonsubs.o imgsubs.o zlibsubs.o zlibg2gini.o
+	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ alarm.o commonsubs.o imgsubs.o zlibsubs.o zlibg2gini.o $(CLIBS) || ($(RM) $@; exit 1)
+
+cdftomd:	cdftomd.o
+	@case "$(ld_netcdf)" in \
+	  "") echo 1>&2 Not making $@ because you did not define LD_NETCDF ;; \
+	  *) set -x; $(CC) $(CFLAGS) $(LDFLAGS) cdftomd.o \
+		$(CLIBS) -o $@ || ($(RM) $@; exit 1) ;; \
+	esac
+
+gunrv2:		gunrv2.o $(common_objs)
+	$(FC) $(FFLAGS) $(LDFLAGS) gunrv2.o $(common_objs) $(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+
+ldm_pipe_exec:	ldm_pipe_exec.sh
+	cp $? $@
+	chmod +x $@
+
+lwfile:		lwfile.o $(common_objs)
+	$(FC) $(FFLAGS) $(LDFLAGS) lwfile.o $(common_objs) $(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+
+lwtoa3:		lwtoa3.o $(common_objs)
+	$(FC) $(FFLAGS) $(LDFLAGS) lwtoa3.o $(common_objs) $(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+
+lwtmd2:		lwtmd2.o  $(common_objs)
+	$(FC) $(FFLAGS) $(LDFLAGS) lwtmd2.o  $(common_objs) $(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+
+nids2area:	alarm.o nids2area.o mcmain.o wsiinput.o \
+		csubs.o udalloc.o 
+	$(FC) $(FFLAGS) $(LDFLAGS) alarm.o nids2area.o mcmain.o wsiinput.o \
+		csubs.o udalloc.o \
+		$(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+
+readit:		readit.c
+	$(CC) $? $(LDFLAGS) -o $@
+
+
+cdftomd.pure:	cdftomd.o
+	purify $(CC) $(CFLAGS) cdftomd.o \
+		$(CLIBS) $(ld_netcdf) -o $@ || ($(RM) $@; exit 1)
+lwtoa3.pure:	lwtoa3.o $(common_objs)
+	purify $(FC) $(FFLAGS) lwtoa3.o $(common_objs) $(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+lwfile.pure:	lwfile.o $(common_objs)
+	purify $(FC) $(FFLAGS) lwfile.o $(common_objs) $(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+gunrv2.pure:	gunrv2.o $(common_objs)
+	purify $(FC) $(FFLAGS) gunrv2.o $(common_objs) $(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+lwtmd2.pure:	lwtmd2.o  $(common_objs)
+	purify $(FC) $(FFLAGS) lwtmd2.o $(common_objs) $(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+nldn2md.pure:	alarm.o nldn2md.o mcmain.o nldninput_cf.o \
+		csubs.o udalloc.o 
+	purify $(FC) $(FFLAGS) alarm.o nldn2md.o mcmain.o \
+	    nldninput_cf.o csubs.o udalloc.o \
+		$(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+nids2area.pure:	alarm.o nids2area.o mcmain.o wsiinput.o \
+		csubs.o udalloc.o 
+	purify $(FC) $(FFLAGS) alarm.o nids2area.o mcmain.o \
+		wsiinput.o csubs.o udalloc.o \
+		$(FLIBS) -o $@ \
+	    || ($(RM) $@; exit 1)
+proftomd.pure:	proftomd.o
+	purify $(CC) $(CFLAGS) proftomd.o $(profiler_objs) \
+		$(CLIBS) $(ld_netcdf) -o $@ || ($(RM) $@; exit 1)
+
+purifies:	FORCE
+	$(MAKE) $(MFLAGS) CDFTOMD=./cdftomd.pure \
+			  LWTOA3=./lwtoa3.pure \
+			  LWFILE=./lwfile.pure \
+			  GUNRV2=./gunrv2.pure \
+			  LWTMD2=./lwtmd2.pure \
+			  NLDN=./nldn2md.pure \
+			  NIDS=./nids2area.pure \
+			  PROFTOMD=./proftomd.pure \
+		test
+
+tags:		FORCE
+	ctags -t `echo $(sources) | fmt -1 | grep '\.c$'` $(headers)
+
+include ../port/master.mk
+
+### Everything after the following line might be overwritten ###
+### DO NOT DELETE THIS LINE.  make depend DEPENDS ON IT ###
+include depend

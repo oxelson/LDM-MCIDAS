@@ -1,0 +1,101 @@
+# Makefile for LDM decoders for the McIDAS data stream.
+#
+# $Id: Makefile.in,v 1.24 1998/10/29 22:25:05 steve Exp $
+
+PACKAGE		= ldm-mcidas
+
+OS		= @OS@
+SUBDIRS		= port libpng zlib decode
+SUBDIR_TARGETS	=	\
+		  port/all port/install port/clean port/distclean port/uninstall \
+		  libpng/all libpng/test libpng/clean libpng/distclean \
+		  zlib/all zlib/clean zlib/distclean \
+		  decode/basic decode/full decode/all decode/test \
+		  decode/install decode/clean decode/distclean decode/uninstall
+
+MANIFEST	= COPYRIGHT CUSTOMIZE INSTALL Makefile.in ORIGIN \
+		  README RELEASE_NOTES VERSION configure configure.in \
+		  ldmd.conf aclocal.m4 cull.sed
+
+basic:		FORCE
+	@case "$(OS)" in \
+	    ultrix*) \
+		echo 2>&1 "Can't make \`$@': no McIDAS library support" \
+		;; \
+	    *)  set -x; \
+		$(MAKE) $(MFLAGS) decode_basic; \
+		set +x; \
+		;; \
+	esac
+
+decode_basic:	port/all zlib/all libpng/all decode/basic
+
+full:		FORCE
+	@case "$(OS)" in \
+	    ultrix*) \
+		echo 2>&1 "Can't make \`$@': no McIDAS library support" \
+		;; \
+	    *)  set -x; \
+		$(MAKE) $(MFLAGS) decode_full; \
+		set +x; \
+		;; \
+	esac
+
+decode_full:	port/all zlib/all libpng/all decode/full
+
+all:		FORCE
+	@case "$(OS)" in \
+	    ultrix*) \
+		echo 2>&1 "Can't make \`$@': no McIDAS library support" \
+		;; \
+	    *)  set -x; \
+		$(MAKE) $(MFLAGS) decode_all; \
+		set +x; \
+		;; \
+	esac
+
+decode_all:	port/all zlib/all libpng/all decode/all
+
+test:		FORCE
+	@case "$(OS)" in \
+	    ultrix*) \
+		echo 2>&1 "Can't make \`$@': no McIDAS library support" \
+		;; \
+	    *)  set -x; \
+		$(MAKE) $(MFLAGS) decode_test; \
+		set +x; \
+		;; \
+	esac
+
+decode_test:	libpng/test decode/test
+
+install:	FORCE
+	@case "$(OS)" in \
+	    ultrix*) \
+		echo 2>&1 "Can't make \`$@': no McIDAS library support" \
+		;; \
+	    *)  set -x; \
+		$(MAKE) $(MFLAGS) decoders_install whatis; \
+		set +x; \
+		;; \
+	esac
+
+decoders_install:	port/install decode/install
+
+clean:	\
+		port/clean       \
+		libpng/clean     \
+		decode/clean     \
+		zlib/clean
+
+distclean:	\
+		port/distclean   \
+		libpng/distclean \
+		decode/distclean \
+		zlib/distclean
+
+uninstall:	\
+		port/uninstall \
+		decode/uninstall
+
+include port/master.mk

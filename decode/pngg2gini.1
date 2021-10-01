@@ -1,0 +1,113 @@
+." $Id: pngg2gini.1,v 1.0 2002/04/04 10:00:00 yoksas Exp $
+.TH PNGG2GINI 1 "2004/09/16 10:00:00 $"
+.SH NAME
+pngg2gini \- Unidata LDM decoder for PNG-compressed NOAAPORT GINI imagery
+.SH SYNOPSIS
+.HP
+.ft B
+pngg2gini
+.nh
+\%[-f\ \fIPNGfile\fP]
+\%[-v]
+\%[-x]
+\%[-l\ \fIlogpath\fP]
+\%\fIIMGfile\fP
+.hy
+.ft
+.SH DESCRIPTION
+.LP
+This program is an LDM decoder for NOAAPORT image data of type \fBGINI\fP
+whose data portion (not header) has been PNG-compressed.
+It reads a PNG-compressed GINI data product from standard input or from a file
+and decodes that data into a NOAAPORT format GINI file.
+.LP
+This program can be invoked by an entry in the LDM \fBpqact.conf\fP
+configuration file similar one of the following:
+.sp
+.nf
+#
+# PNG compressed NOAAPORT GINI images
+#
+NIMAGE	^sat/ch[0-9]/.*/(.*)/([12][0-9])([0-9][0-9])([01][0-9])([0-3][0-9]) ([0-2][0-9])([0-5][0-9])/(.*)/(.*km)/
+	PIPE	-close
+	pngg2gini -vl logs/ldm-mcidas.log
+	/data/ldm/gempak/images/sat/\\8/\\9/\\1/\\1_\\2\\3\\4\\5_\\6\\7
+
+# 
+# PNG compressed 1 km NEXRAD Level III composite image in GINI format
+#
+FNEXRAD	^rad/NEXRCOMP/(...)/(...)_(........)_(....)
+	PIPE	-close
+	pngg2gini -vl logs/ldm-mcidas.log
+	/data/ldm/gempak/nexrad/NEXRCOMP/\\1/\\2/\\2_\\3_\\4
+
+.fi
+.RE
+.LP
+Additional examples of LDM pqact.conf entries can be
+found in the file ldm-mcidas-pqact.conf in the \fBetc/\fP subdirectory of the 
+ldm-mcidas installation tree.
+.fi
+.RE
+.LP
+This program can also be invoked as a
+stand-alone program, outside the LDM environment.
+
+.SH FLAGS
+.TP
+.BI "-f " PNGfile
+Pathname for input PNG compressed GINI file (default is stdin)
+.TP
+.B "-h "
+Print help information, then exit the program.
+.TP
+.B -v
+Verbose logging.
+Informative messages (level LOG_INFO) are logged.
+By default, only messages of severity LOG_NOTICE and greater are
+logged. See the Unidata  LDM Site  Manager's  Guide  for more information on 
+message logging.
+.TP
+.B -x
+Debug logging.
+Debugging messages (level LOG_DEBUG) are logged. See the Unidata  LDM Site  
+Manager's  Guide  for more information on message logging.
+.TP
+.BI "-l " logpath
+Log file pathname.
+The program uses Unidata's \fBulog\fP(3) package to write error and diagnostic
+messages.
+The default is to write to the \fBsyslogd\fP(8) daemon.  If this option is
+specified, however, then messages will be written to the file
+\fIlogpath\fP unless that pathname is "-", in which case all messages will be
+written to standard error.
+.TP
+.BI "IMGfile "
+Output GINI pathname mask (required: no default).
+.sp
+IMGfile may contain 'replaceables':
+  \\AREA - areal coverage information
+  \\BAND - band information
+  \\RES  - resolution information
+  \\SAT  - satellite platform information
+.sp
+and 'strftime' style day/time specifiers that will get resolved by image
+day/time information:
+  %%Y    - image year       [CCYY]
+  %%m    - image month      [MM]
+  %%d    - image day        [DD]
+  %%j    - image Julian day [JJJ]
+  %%H    - image hour       [HH]
+  %%M    - image minute     [MM]
+  etc.
+
+.RE
+.SH NOTES
+.LP
+.RE
+.SH "SEE ALSO"
+.LP
+.BR ~ldm-mcidas/etc/ldm-mcidas-pqact.conf,
+.BR ldmd (1),
+.BR ulog (3),
+.BR syslogd (8).

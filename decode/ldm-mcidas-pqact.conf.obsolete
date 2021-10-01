@@ -1,0 +1,163 @@
+#------------------------------------------------------------------------------
+#
+#        ***** Obsolete IDD decoder actions as of 7/1/99 *****
+#
+# NOTE: all actions are commented out
+#
+#------------------------------------------------------------------------------
+
+#
+#### Delta compressed Unidata-Wisconsin channel image (AREA) files
+#
+
+#MCIDAS	^(LWTOA3 .*)
+#	PIPE	-close 
+#	lwtoa3 -d /var/data/mcidas -v
+
+#
+#### Unidata-Wisconsin channel FSL Wind Profiler netCDF file to MD action
+#
+
+#MCIDAS	^(LWFILE PROFILER.CDF)
+#	PIPE	-close
+#	lwfile -d /var/data/mcidas -v
+
+#MCIDAS	^(LWFILE) (PROFILER.CDF) .* DIALPROD=(..)
+#	EXEC
+#	cdftomd -d /var/data/mcidas -v \3 \2 81
+
+#MCIDAS	^(LWFILE) (PROFILER.CDF) .* DIALPROD=(..)
+#	PIPE	-close
+#	cdfconvert \3 \2 81
+
+#
+####         Unidata-Wisconsin channel gridded/model (GRID) files
+#
+
+#MCIDAS	^(GUNRV2 .*)
+#	PIPE	-close
+#	gunrv2 -d /var/data/mcidas -v
+
+#
+#### Unidata-Wisconsin channel "text" files (i.e. NOT of type AREA, GRID or MD)
+#
+
+#MCIDAS	^(LWFILE) (ADMIN.MSG|UNIDATAS) .* DIALPROD=(..)
+#	PIPE	-close
+#	lwfile -d /var/data/mcidas -v
+
+#
+####         Unidata-Wisconsin channel point source (MD) files
+#
+
+#MCIDAS	^(LWTMD2 .*)
+#	PIPE	-close
+#	lwtmd2 -d /var/data/mcidas -v
+
+#
+####                      WSI NIDS radar data products
+#
+
+#WSI	^NEX/(...)/(BREF1)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0
+-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8001 \1 DIALPROD=R1 \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(BREF2)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8002 \1 DIALPROD=R2 \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(BREF3)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8003 \1 DIALPROD=R3 \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(BREF4)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8004 \1 DIALPROD=R4 \3%j \6\700 DEV=CCN
+
+# Action that creates Composite Reflectivity AREAs in the /var/data/mcidas
+# directory.
+#
+#WSI	^NEX/(...)/(CREF)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8005 \1 DIALPROD=R5 \3%j \6\700 DEV=CCN
+
+# Actions that create Layer Reflectivity AREAs for the three layers: sfc-24 Kft,
+# 24-33 K ft, and 33-60 Kft in the # /var/data/mcidas directory.
+#
+#WSI	^NEX/(...)/(LREF1)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8006 \1 DIALPROD=R6 \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(LREF2)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8007 \1 DIALPROD=R7 \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(LREF3)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8008 \1 DIALPROD=R8 \3%j \6\700 DEV=CCN
+
+# Action that creates Echo Tops AREAs in the /var/data/mcidas directory.
+#
+#WSI	^NEX/(...)/(TOPS)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8009 \1 DIALPROD=R9 \3%j \6\700 DEV=CCN
+
+# Action that creates Vertically Integrated Liquid Water AREAs in the 
+# /var/data/mcidas directory.
+#
+#WSI	^NEX/(...)/(VIL)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8010 \1 DIALPROD=RA \3%j \6\700 DEV=CCN
+
+# Actions that create 1-hour, 3-hour, and Storm Total Rainfall total AREAs in 
+# the /var/data/mcidas directory.
+#
+#WSI	^NEX/(...)/(PRE1)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8011 \1 DIALPROD=RB \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(PRE3)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8012 \1 DIALPROD=RC \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(PRET)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8013 \1 DIALPROD=RD \3%j \6\700 DEV=CCN
+
+# Actions that create Radial Velocity AREAs at all 4 radar tilt in the 
+# /var/data/mcidas directory.
+#
+#WSI	^NEX/(...)/(VEL1)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8014 \1 DIALPROD=RE \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(VEL2)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8015 \1 DIALPROD=RF \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(VEL3)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8016 \1 DIALPROD=RG \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(VEL4)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8017 \1 DIALPROD=RH \3%j \6\700 DEV=CCN
+
+# Action that creates 248 nm Base Reflectivity AREA tilt in the 
+# /var/data/mcidas directory.
+#
+#WSI	^NEX/(...)/(BRLR1)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8018 \1 DIALPROD=RI \3%j \6\700 DEV=CCN
+
+# Action that creates Storm Relative Mean Velocity at two tilts in the
+# /var/data/mcidas directory.
+#
+#WSI	^NEX/(...)/(SRMV1)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8019 \1 DIALPROD=RJ \3%j \6\700 DEV=CCN
+
+#WSI	^NEX/(...)/(SRMV2)/..([0-9][0-9])([0-1][0-9])([0-3][0-9])([0-2][0-9])([0-6][0-9])
+#	PIPE	-close
+#	nids2area -d /var/data/mcidas 8020 \1 DIALPROD=RK \3%j \6\700 DEV=CCN

@@ -1,0 +1,159 @@
+." $Id: nldn2md.1,v 1.5 2004/09/16 17:32:51 yoksas Exp $
+.TH NLDN2MD 1 "2004/09/16 17:32:51 $"
+.SH NAME
+nldn2md \- Unidata LDM decoder for NLDN lightning data
+.SH SYNOPSIS
+.HP
+.ft B
+nldn2md
+.nh
+\%[-v]
+\%[-x]
+\%[-l\ \fIlogpath\fP]
+\%[-[f|F]\ \fIfile\fP] \\
+.nf
+.ta 3n
+	nn schema <Keywords>
+.hy
+.ft
+.SH DESCRIPTION
+.LP
+This program is an LDM-compatible decoder for NLDN data.
+It reads NLDN data observations from standard input or from a file
+and decodes that data into a McIDAS \fBMD\fP file.
+.LP
+This program can be invoked by an entry in an LDM
+configuration file similar to the following:
+.sp
+.ta 4n +4n +4n
+.nf
+NLDN	^(9[3-9])([0-3][0-9][0-9])([0-2][0-9])([0-5][0-9])([0-5][0-9])
+	PIPE	-close
+	nldn2md -vl logs/ldm-mcidas.log
+	-d /var/data/mcidas 71 NLDN DIALPROD=LD \\1\\2 \\3\\400 DEV=CCN
+.fi
+.RE
+.LP
+Additional examples of LDM pqact.conf entries can be
+found in the file ldm-mcidas-pqact.conf in the \fBetc/\fP subdirectory of the 
+ldm-mcidas installation tree.
+.fi
+.RE
+.LP
+Since this program reads from standard input, it can also be invoked as a
+stand-alone program, outside the LDM environment.
+.fi
+.RE
+.SH OPTIONS
+.TP
+.BI "-d " datadir
+Change to directory \fIdatadir\fP before decoding.  As a consequence, the
+output file will appear in that directory and the \fBROUTE.SYS\fP and
+\fBSYSKEY.TAB\fP files will be looked for and, if found, used, and updated
+in that directory.  Note that \fBROUTE.SYS\fP and \fBSYSKEY.TAB\fP must be
+both readable and writable by the user running \fBnldn2md\fP.
+.TP
+.BI "-f " path
+Read from file \fIpath\fP rather than from standard input.
+.TP
+.BI "-F " path
+Read from file \fIpath\fP rather than from standard input.  At exit, delete
+the file.
+.TP
+.BI "-l " logpath
+Log file pathname.
+The program uses Unidata's \fBulog\fP(3) package to write error and diagnostic
+messages.
+The default is to write to the \fBsyslogd\fP(8) daemon.  If this option is
+specified, however, then messages will be written to the file
+\fIlogpath\fP unless that pathname is "-", in which case all messages will be
+written to standard error.
+.TP
+.B -v
+Verbose logging.
+Informative messages (level LOG_INFO) are logged.
+By default, only messages of severity LOG_NOTICE and greater are
+logged. See the Unidata LDM Site  Manager's  Guide  for more information on 
+message logging.
+.TP
+.B -x
+Debug logging.
+Debugging messages (level LOG_DEBUG) are logged. See the Unidata LDM Site 
+Manager's  Guide  for more information on message logging.
+.SH POSITIONAL PARAMETERS
+.TP
+.B nn 
+McIDAS \fBMD\fP file base number.
+Data will be stored in \fBMD\fP files that follow the standard McIDAS naming 
+rule.  The MD file number is the combination of the last digit of the Julian 
+day [1-366] and the base \fBMD\fP number.  If the last digit of the Julian day
+is zero, the \fBMD\fP file number will be the base number plus 10.  It is 
+recommended to use 71 as the base MD number.
+.TP
+.B schema
+McIDAS \fBMD\fP file schema name.
+The schema file defines how the data will be stored and accessed in the MD 
+file.  The currently supported schema, NLDN, is supplied in the binary file 
+\fBDCNLDN\fP.  This schema must be added to the McIDAS schemas file, 
+\fBSCHEMA\fP, in 
+order for nldn2md to run.  For instructions on adding an \fBMD\fP file 
+schema to \fBSCHEMA\fP, refer to \fBSCHE\fP section in the McIDAS-X Users
+Guide.
+.SH KEYWORDS
+.TP
+.BI DIALPROD= "product_code [day] [time]"
+McIDAS product code identifier.
+The \fBDIALPROD\fP keyword tells \fBnldn2md\fP to look in the McIDAS file 
+routing table,
+\fBROUTE.SYS\fP, to get the output \fBMD\fP file base number for the product
+identified as \fIproduct_code\fP.  The optional 
+\fIday\fP and \fItime\fP
+parameters are useful for tracing decoding status in the log file.
+If \fBROUTE.SYS\fP does not exist in the output directory (see \fB-d\fP flag
+above) the \fBnn\fP base positional parameter described earlier will be used. In
+order for \fBROUTE.SYS\fP to be used and updated, it must be both readable
+and writable by the user running \fBnldn2md\fP.
+.TP
+.BI DEV= XYZ
+McIDAS information reporting.
+The \fBDEV\fP keyword tells \fBnldn2md\fP which informational messages 
+to write to the
+log file.  The form of the value for this keyword is a three capital letter
+sequence each letter of which can be a \fBC\fP (print message) or \fBN\fP 
+(suppress 
+message). The order-dependent values refer to: standard messages, error 
+messages, and debug messages, respectively.  The sequence \fBDEV=CCN\fP is 
+recommended.
+.SH NOTES
+.LP
+The \fBDIALPROD\fP
+keyword entry must refer to a \fBROUTE.SYS\fP product of type \fBMD\fP.  
+
+The McIDAS file routing table \fBROUTE.SYS\fP must reside in the same 
+directory as the schema file, \fBSCHEMA\fP, and the output \fBMD\fP file
+(see \fB-d\fP option above) and be readable and writable by the user running
+\fBnldn2md\fP.  It is recommended to use the product code \fBLD\fP 
+in updating \fBROUTE.SYS\fP (for more information see the section on 
+\fBROUTE\fP in the McIDAS-X Users Guide):
+
+.nf
+ROUTE ADD LD MD 71 71 CC=3 SYS=2051 2052 2053 "NLDN Lightning Flashes
+ROUTE REL LD
+.fi
+
+\fBSCHEMA\fP must reside in the same directory as the output \fBMD\fP file 
+(see \fB-d\fP option above), and it must be readable by the user running 
+\fBnldn2md\fP.  \fBSCHEMA\fP must also be a McIDAS-X file, not an McIDAS-OS2
+one.
+
+If the McIDAS system key table, \fBSYSKEY.TAB\fP, exists in the same directory
+as the output \fBMD\fP file, table entries specified by the \fBSYS=\fP 
+keyword (illustrated in the example above) will be updated
+if it is both readable and writable by the user running \fBnldn2md\fP.
+.RE
+.SH "SEE ALSO"
+.LP
+.BR ~ldm-mcidas/etc/ldm-mcidas-pqact.conf,
+.BR ldmd (1),
+.BR ulog (3),
+.BR syslogd (8).

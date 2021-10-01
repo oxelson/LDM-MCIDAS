@@ -1,0 +1,130 @@
+# makefile for libpng
+# Copyright (C) 1995 Guy Eric Schalnat, Group 42, Inc.
+# For conditions of distribution and use, see copyright notice in png.h
+
+# where make install puts libpng.a and png.h
+#prefix=/usr/local
+
+# Where the zlib library and include files are located
+#ZLIBLIB=/usr/local/lib
+#ZLIBINC=/usr/local/include
+ZLIBLIB=../zlib
+ZLIBINC=../zlib
+
+#CC=cc
+#CFLAGS=-I$(ZLIBINC) -O # -g -DPNG_DEBUG=5
+
+CFLAGS=@CFLAGS@ -I$(ZLIBINC)
+LDFLAGS=@LDFLAGS@ -L. -lpng -L$(ZLIBLIB) -lz -lm
+
+LIBOBJS = \
+	png.o	\
+	pngerror.o	\
+	pnggccrd.o	\
+	pngget.o	\
+	pngmem.o	\
+	pngpread.o	\
+	pngread.o	\
+	pngrio.o	\
+	pngrtran.o	\
+	pngrutil.o	\
+	pngset.o	\
+	pngtrans.o	\
+	pngvcrd.o	\
+	pngwio.o	\
+	pngwrite.o	\
+	pngwtran.o	\
+	pngwutil.o
+
+MANIFEST	= \
+	ANNOUNCE	\
+	CHANGES	\
+	INSTALL	\
+	KNOWNBUG	\
+	LICENSE	\
+	Makefile.in	\
+	README	\
+	TODO	\
+	Y2KINFO	\
+	example.c	\
+	libpng.3	\
+	libpng.txt	\
+	libpngpf.3	\
+	png.5	\
+	png.c	\
+	png.h	\
+	pngasmrd.h	\
+	pngbar.jpg	\
+	pngbar.png	\
+	pngconf.h	\
+	pngerror.c	\
+	pnggccrd.c	\
+	pngget.c	\
+	pngmem.c	\
+	pngnow.png	\
+	pngpread.c	\
+	pngread.c	\
+	pngrio.c	\
+	pngrtran.c	\
+	pngrutil.c	\
+	pngset.c	\
+	pngtest.c	\
+	pngtest.png	\
+	pngtrans.c	\
+	pngvcrd.c	\
+	pngwio.c	\
+	pngwrite.c	\
+	pngwtran.c	\
+	pngwutil.c
+
+all: libpng.a pngtest
+
+libpng.a: $(LIBOBJS)
+	$(AR) rcuv $@  $(LIBOBJS)
+	-$(RANLIB) $@
+
+pngtest: pngtest.o libpng.a
+	$(CC) -o pngtest $(CFLAGS) pngtest.o $(LDFLAGS)
+
+test: pngtest
+	./pngtest
+	./pngtest pngnow.png
+
+install: libpng.a
+	-@mkdir $(prefix)/include
+	-@mkdir $(prefix)/lib
+	cp png.h $(prefix)/include
+	cp pngconf.h $(prefix)/include
+	chmod 644 $(prefix)/include/png.h
+	chmod 644 $(prefix)/include/pngconf.h
+	cp libpng.a $(prefix)/lib
+	chmod 644 $(prefix)/lib/libpng.a
+
+clean: default_clean
+	rm -f *.o libpng.a pngtest pngout.png
+
+distclean: clean default_distclean
+
+include ../port/master.mk
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
+png.o: png.c png.h pngconf.h
+pngerror.o: pngerror.c png.h pngconf.h
+pnggccrd.o: pnggccrd.c png.h pngconf.h
+pngget.o: pngget.c png.h pngconf.h
+pngmem.o: pngmem.c png.h pngconf.h
+pngpread.o: pngpread.c png.h pngconf.h
+pngread.o: pngread.c png.h pngconf.h
+pngrio.o: pngrio.c png.h pngconf.h
+pngrtran.o: pngrtran.c png.h pngconf.h
+pngrutil.o: pngrutil.c png.h pngconf.h
+pngset.o: pngset.c png.h pngconf.h
+pngtrans.o: pngtrans.c png.h pngconf.h
+pngvcrd.o: pngvcrd.c png.h pngconf.h
+pngwio.o: pngwio.c png.h pngconf.h
+pngwrite.o: pngwrite.c png.h pngconf.h
+pngwtran.o: pngwtran.c png.h pngconf.h
+pngwutil.o: pngwutil.c png.h pngconf.h
+
+pngtest.o: pngtest.c png.h pngconf.h

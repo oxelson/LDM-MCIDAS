@@ -1,0 +1,154 @@
+." $Id: proftomd.1,v 1.1 1004/09/16 21:29:04 yoksas Exp $
+.TH PROFTOMD 1 "2004/09/16 21:29:04 $"
+.SH NAME
+proftomd \- Unidata LDM decoder for FSL netCDF wind profiler data
+.SH SYNOPSIS
+.HP
+.ft B
+proftomd
+.nh
+\%[-v]
+\%[-x]
+\%[-l\ \fIlogpath\fP]
+\%[-d\ \fIdirectory\fP]
+\%[-f\ \fIfile\fP]
+\%\fIpcode\fP
+\%\fIschema\fP
+\%\fIMD_number\fP
+.hy
+.ft
+.SH DESCRIPTION
+.LP
+This program is an LDM decoder for McIDAS data of type \fBMD\fP:
+it reads a FSL netCDF data product from a pipe or a file
+and decodes that data into a McIDAS \fBMD\fP file.
+.LP
+This program can be invoked by entries in an LDM configuration file
+similar to the following:
+.sp
+.ta 4n +4n +4n
+.nf
+##
+# Examples of decoding FSL hourly summary and 6-minute profiler data
+# that do not save broadcast netCDF file
+#
+# Hourly summary
+FSL2  ^FSL\.NetCDF\.NOAAnet\.windprofiler\.01hr
+	PIPE	-close
+	proftomd -vl logs/ldm-mcidas.log
+	-d /var/data/mcidasd U4 WPRO 81
+
+# 6-minute
+FSL2  ^FSL\.NetCDF\.NOAAnet\.windprofiler\.06min
+	PIPE	-close
+	proftomd -vl logs/ldm-mcidas.log
+	-d /var/data/mcidasd U2 WPR6 91
+
+.LP
+# Examples of decoding FSL hourly summary and 6-minute profiler data
+# that save broadcast netCDF file
+#
+# Hourly summary
+FSL2  ^FSL\.NetCDF\.NOAAnet\.windprofiler\.01hr
+	PIPE	-close
+	proftomd -vl logs/ldm-mcidas.log
+	-n /var/data/mcidasd/\1.nc
+	-d /var/data/mcidasd U4 WPRO 81
+# 6-minute
+FSL2  ^FSL\.NetCDF\.NOAAnet\.windprofiler\.06min
+	PIPE	-close
+	proftomd -vl logs/ldm-mcidas.log
+	-n /var/data/mcidasd/\1.nc
+	-d /var/data/mcidasd U2 WPR6 91
+.fi
+.RE
+.LP
+The first set of two actions execute \fBproftomd\fP on a temporary file that
+\fBproftomd\fP creates.  The temporary file is deleted after the
+decoding into the McIDAS \fBMD\fP file.  The temporary file is needed since
+\fBproftomd\fP can not be run from data piped to its standard input
+since netCDFs are, by nature, random access files.
+.LP
+The second set of two actions demonstrates how to save the broadcast netCDFs
+and then decode them into the McIDAS \fBMD\fP files.
+.LP
+Additional examples of LDM pqact.conf entries can be
+found in the file ldm-mcidas-pqact.conf in the \fBetc/\fP subdirectory of the 
+ldm-mcidas installation tree.
+.fi
+.RE
+.LP
+This program can also be invoked as a stand-alone program, outside the
+\fBLDM\fP environment.
+.SH OPTIONS
+.TP
+.BI "-d " datadir
+Change to directory \fIdatadir\fP before decoding.  As a consequence, the
+output file will appear in that directory and the \fBROUTE.SYS\fP and
+\fBSYSKEY.TAB\fP files will be looked for and, if found, used, and updated
+in that directory.  NOTE that the McIDAS schema file \fBSCHEMA\f must
+exist in this directory for \fIproftomd\f to work.
+.TP
+.BI "-f " filename
+Specifies that \fIfilename\fP is to be used as the source netCDF for decoding.
+.TP
+.BI "-n " filename
+Save the broadcast netCDF into \fIfilename\f and then decode it into the
+McIDAS \fBMD\fP file.  NOTE: \fI-n\f is ignored if \fI-f\f is specified.
+.TP
+.BI "-l " logpath
+Log file pathname.
+The program uses Unidata's \fBulog\fP(3) package to write error and diagnostic
+messages.
+The default is to write to the \fBsyslogd\fP(8) daemon.  If this option is
+specified, however, then messages will be written to the file
+\fIlogpath\fP unless that pathname is "-", in which case all messages will be
+written to standard error.
+.TP
+.B -v
+Verbose logging.
+Informative messages (level LOG_INFO) are logged.
+By default, only messages of severity LOG_NOTICE and greater are
+logged. See the Unidata  LDM Site  Manager's  Guide  for more information on 
+message logging.
+.TP
+.B -x
+Debug logging.
+Debugging messages (level LOG_DEBUG) are logged. See the Unidata  LDM Site  
+Manager's  Guide  for more information on message logging.
+.SH NOTES
+.LP
+Unidata recommends that the following McIDAS-X routing table update commands
+be use to setup \fBROUTE.SYS\fP entries used by \fBproftomd\fP (for more
+information see the section on \fBROUTE\fP in the McIDAS-X Users Guide):
+
+.nf
+ROUTE ADD U2 MD     X   X CC=3 SYS=2041 2042 2043 "FSL2 hourly wind profiler
+ROUTE ADD U6 MD     X   X CC=3 SYS=2044 2045 2046 "FSL2 6-minute Wind profiler
+ROUTE REL U2 U6
+.fi
+
+The McIDAS schema file, \fBSCHEMA\fP, must exist in the directory into
+which \fBproftomd\fP creates data files and be readable by the user
+running \fBproftomd\fP. \fBproftomd\fP reads information about the form
+of the output \fBMD\fP file from \fBSCHEMA\fP.
+
+\fBROUTE.SYS\fP and \fBSYSKEY.TAB\fP must be readable and writable by
+the user running \fBproftomd\fP.  
+
+\fBROUTE.SYS\fP will be used by \fBproftomd\fP if it exists in the
+directory in which \fBproftomd\fP creates its output \fBMD\fP files (see
+\fB-d\fP flag above) and if it is both readable and writable by the
+user running the \fBproftomd\fP.
+
+\fBSYSKEY.TAB\fP entries specified by the \fBSYS=\fP keyword listed above
+will be updated if \fBSYSKEY.TAB\fP exists in the directory in which
+\fBproftomd\fP creates its output \fBMD\fP files (see \fB-d\fP flag above) and
+is both readable and writable by the user running \fBproftomd\fP.
+.RE
+.SH "SEE ALSO"
+.LP
+.BR ~ldm-mcidas/etc/ldm-mcidas-pqact.conf,
+.BR ldmd (1),
+.BR ulog (3),
+.BR syslogd (8).

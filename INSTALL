@@ -1,0 +1,346 @@
+                        TO INSTALL THIS PACKAGE
+
+1.  Go to the top-level, source directory of this package (i.e. the
+    directory that contains this file).
+
+2.  Execute the command "make distclean".  Don't worry if it fails to
+    execute because it can't find a makefile.
+
+3.  Remove the file "config.cache" if it exists.
+
+4.  Set environment variables to customize the build process.  The 
+    TESTED SYSTEMS section below contains examples of environment
+    variable settings that resulted in successful builds.  USE IT.
+
+    (For the following variables, any value given in the environment
+    overrides the value that `configure' would choose:)
+
+        CC          C compiler program.  Default is platform-dependent.
+
+                    Suggested setting for CC:
+
+                    cc
+
+                    NB: c89 use will result in build errors
+
+        CFLAGS      C compiler options.  Default is `-O'.
+
+        FC          Fortran compiler.  Default is platform-dependent.
+
+        FFLAGS      Fortran compiler options.  Default is `-O'.
+
+        LDMHOME     HOME directory for the user running the LDM
+
+        LDFLAGS     Linker (ld) options.  Default is nothing.
+
+                    Suggestions for LDFLAGS defines:
+
+                    Linux:   LDFLAGS="-Wl,-rpath,$LDMHOME/lib"
+                    MacOS-X: LDFLAGS="-Wl,-search_paths_first"
+                    SunOS 5: LDFLAGS="-Wl,-rpath,$LDMHOME/lib"
+                    FreeBSD: LDFLAGS="-Wl,-rpath,$LDMHOME/lib"
+                    HP-UX:   LDFLAGS="-Wl,+b,$LDMHOME/lib"
+                    IRIX:    LDFLAGS="-Wl,-rpath,$LDMHOME/lib"
+                    OSF1:    LDFLAGS="-Wl,-rpath,$LDMHOME/lib"
+
+        CPP_LDM     Compile-time reference for Unidata LDM header files.
+
+                    Example:
+
+                    CPP_LDM='-I$LDMHOME/include'.
+
+        LD_LDM      Link-time reference for Unidata LDM library.
+
+                    Example:
+
+                    LD_LDM='-L$LDMHOME/lib -lldm'.
+
+        CPP_MCIDAS  Compile-time reference for McIDAS header files.
+
+                    Example:
+
+                    CPP_MCIDAS='-I/home/mcidas/mcidas<version>/src'.
+
+        LD_MCIDAS   Link-time reference for McIDAS library.
+
+                    Example:
+
+                    LD_MCIDAS='-L/home/mcidas/lib -lmcidas'.
+
+        CPP_NETCDF  Compile-time reference for netCDF header files.
+
+                    Example:
+
+                    CPP_NETCDF='-I/home/mcidas/mcidas<version>/netcdf/libsrc'.
+
+        LD_NETCDF   Link-time reference for netCDF library.
+
+                    Example:
+
+                    LD_NETCDF='-L/home/mcidas/lib -lnetcdf'.
+
+        LD_FORTRAN  Link-time reference for any additional libraries 
+                    necessary for building a Fortran program.  Default
+                    is nothing.
+
+                    Example:
+
+                    LD_FORTRAN='-static -lf2c'
+
+        LD_MATH     On some systems, one must define LD_MATH to be
+                    '-lm'; on others the OS default is to include search
+                    of the math library.
+
+                    Example:
+
+                    LD_MATH='-lm'
+
+        LD_X11      On some systems, one must define LD_X11 to be '' (blank)
+
+                    Example:
+
+                    LD_X11=''
+
+    For the following variables, any value given in the environment is
+    added to the value that `configure' chooses:
+
+        CPPFLAGS    C preprocessor options.  Default is nothing, implying
+                    assert()-checking is enabled.
+
+        LIBS        Libraries to link with, in the form `-L/foo/bar -lbof ...'
+
+5.  Decide where you want to install the package.  By default, the
+    package's files will be installed in ../bin, ../lib, ../man,
+    etc. (relative to the directory containing this file).  You can
+    specify an installation prefix other than `../' by giving the
+    `configure' script in the next step the option `--prefix=<path>',
+    where <path> is the pathname of the installation-point (e.g.
+    `--prefix=/usr/local').
+
+    You can specify separate installation prefixes for architecture-
+    specific files and architecture-independent files.  If you give the
+    `configure' script the option `--exec_prefix=<path>', the package
+    will use <path> as the prefix for installing programs and libraries.
+    Data files and documentation will still use the regular prefix.
+    Normally, all files are installed using the regular prefix.
+
+6.  Execute the command "./configure" -- possibly with the installation
+    path options from the previous step.  Redirect its standard output
+    and standard error to the file "configure.log".
+
+    This will configure the makefiles for the build process.
+
+    If this step fails -- which is indicated by error messages (not
+    warnings) in "configure.log" -- then stop and send items A through E
+    below to <support-ldm-mcidas@unidata.ucar.edu>.
+
+7.  Execute the command "make".  Redirect its standard output and
+    standard error to the file "make.log".  If this step fails, then
+    stop and send items A through F below to <support@unidata.ucar.edu>.
+
+8.  Optional:
+    Execute the command "make test".  Redirect its standard output and
+    standard error to the file "test.log".  If this step fails, then
+    stop and send items A through G below to <support@unidata.ucar.edu>.
+
+9.  Execute the command "make install".  Redirect its standard
+    output and standard error to the file "install.log".  If this
+    step fails, then stop and send items A through H below to
+    <support@unidata.ucar.edu>.
+
+10. Execute the command "make clean".  This will clean up the source
+    directory-tree by removing most temporary files.  It will, however,
+    leave the Makefiles, the ".log" files from the previous steps, the
+    file "config.cache" (which MUST be removed in order to build on a
+    different system) and the executable script "config.status" (which
+    was created by the configure script and creates the makefiles).  If
+    you don't wan't any of these files, then execute the command "make
+    distclean" instead.
+
+
+The following items help us diagnose installation problems:
+
+    A.  The standard output of the command "uname -a".
+
+    B.  The contents of the file VERSION, which is in the top-level
+        source directory.
+
+    C.  The absolute pathnames of all compilers (C, Fortran, C++) used
+        in the build process (use the type(1) or which(1) utility to
+        determine this).
+
+    D.  The file "configure.log" from step 6 above.
+
+    E.  The file "config.log", which is created in the top-level source
+        directory by the configure script during step 6 above.
+
+    F.  The file "make.log" from step 7 above.
+
+    G.  The file "test.log" from step 8 above.
+
+    H.  The file "install.log" from step 9 above.
+
+************************************************************************
+
+TESTED SYSTEMS:
+
+This package has been built on the following systems using the indicated 
+environment variable settings:
+
+    AIX zasu 1 5 000C330F4C00
+        CC=cc
+        CFLAGS=-O
+        CPP=/usr/ccs/lib/cpp
+        CPPFLAGS='-Dextname -D_XOPEN_SOURCE_EXTENDED'           # necessary
+        FC=f77
+        FFLAGS='-O -qextname -qextern=abort -qcharlen=4096 -qspillsize=4096'
+        CPP_LDM=-I/usr/local/ldm/include
+        LD_LDM='-L/usr/local/ldm/lib -lldm'
+        CPP_MCIDAS=-I/home/mcidas/aix/inc                       # site specific
+        LD_MCIDAS='-L/home/mcidas/aix/lib -lmcidas'             # site specific
+        CPP_NETCDF=-I/home/mcidas/aix/include                   # site specific
+        LD_NETCDF='-L/home/mcidas/aix/lib -lnetcdf'             # site specific
+        LD_SOCKET='-L/usr/lib -lnsl'
+        LD_X11='-L/lib -lX11'
+
+    Darwin sid 8.11.0 Darwin root:xnu-792.24.17~1/RELEASE_PPC Power Macintosh powerpc
+        CC=gcc
+        CFLAGS=-O
+        CPPFLAGS='-DNDEBUG -Df2cFortran'
+        FC=g77
+        FFLAGS='-O -Wuninitialized -fno-automatic -ff90-intrinsics-hide'
+        CPP_LDM=-I/home/yoksas/upc/ldm/include
+        LD_LDM=-'L/home/yoksas/upc/ldm/lib -lldm'
+        CPP_MCIDAS=-I/home/mcidas/darwin_powerpc/inc            # site specific
+        LD_MCIDAS='-L/home/mcidas/darwin_powerpc/lib -lmcidas'  # site specific
+        CPP_NETCDF=-I/home/mcidas/darwin_powerpc/include        # site specific
+        LD_NETCDF='-L/home/mcidas/darwin_powerpc/lib -lnetcdf'  # site specific
+        LD_MATH=-lm
+
+    Darwin mort 9.6.0 Darwin Kernel Version 9.6.0: root:xnu-1228.9.59~1/RELEASE_I386 i386
+        CC=gcc
+        CFLAGS=-O
+        CPPFLAGS='-DNDEBUG -Df2cFortran'
+        FC=gfortran
+        FFLAGS='-O -Wuninitialized -fno-automatic -fno-range-check'
+        CPP_LDM=-I/home/yoksas/upc/ldm/include
+        LD_LDM=-'L/home/yoksas/upc/ldm/lib -lldm'
+        CPP_MCIDAS=-I/home/mcidas/darwin_powerpc/inc            # site specific
+        LD_MCIDAS='-L/home/mcidas/darwin_powerpc/lib -lmcidas'  # site specific
+        CPP_NETCDF=-I/home/mcidas/darwin_powerpc/include        # site specific
+        LD_NETCDF='-L/home/mcidas/darwin_powerpc/lib -lnetcdf'  # site specific
+        LD_MATH=-lm
+
+    IRIX64 flip 6.5 01200532 IP30
+        CC=/bin/cc
+        CFLAGS='-n32 -O -Wl,-woff,84 -Wl,-woff,85'   # disable warnings 84 & 85
+        FC=/bin/f77
+        FFLAGS='-n32 -O -Wl,-woff,84 -Wl,-woff,85'   # disable warnings 84 & 85
+        CPP_LDM=-I/usr/local/ldm/include
+        LD_LDM=-L/usr/local/ldm/lib -lldm
+        CPP_MCIDAS=-I/home/mcidas/sgi/inc                       # site specific
+        LD_MCIDAS='-L/home/mcidas/sgi/lib -lmcidas'             # site specific
+        CPP_NETCDF=-I/home/mcidas/include                       # site specific
+        LD_NETCDF='-L/home/mcidas/lib -lnetcdf'                 # site specific
+
+    Fedora 10 Linux chico 2.6.27.21-170.2.56.fc10.i686 #1 SMP
+        CC=gcc
+        CFLAGS=-O
+        CPPFLAGS=-DNDEBUG -Df2cFortran
+        FC=gfortran
+        FFLAGS=-O -Wuninitialized -fno-automatic
+        CPP_LDM=-I/local/ldm/include
+        LD_LDM='-L/local/ldm/lib -lldm'
+        CPP_MCIDAS=-I/home/mcidas/linux/inc                     # site specific
+        LD_MCIDAS=.-L/home/mcidas/linux/lib -lmcidas'           # site specific
+        CPP_NETCDF=-I/home/mcidas/linux/include                 # site specific
+        LD_NETCDF='-L/home/mcidas/linux/lib -lnetcdf'           # site specific
+        LD_MATH=-lm
+
+    Fedora 10 Linux yakov 2.6.27.21-170.2.56.fc10.x86_64 #1 SMP x86_64
+        CC=gcc
+        CFLAGS=-O
+        CPPFLAGS=-DNDEBUG -Df2cFortran
+        FC=gfortran
+        FFLAGS=-O -Wuninitialized -fno-automatic
+        CPP_LDM=-I/usr/local/ldm/include
+        LD_LDM='-L/usr/local/ldm/lib -lldm'
+        CPP_MCIDAS=-I/home/mcidas/linux64/include              # site specific
+        LD_MCIDAS='-L/home/mcidas/linux64/lib -lmcidas'        # site specific
+        CPP_NETCDF=-I/home/mcidas/linux64/include              # site specific
+        LD_NETCDF='-L/home/mcidas/linux64/lib -lnetcdf'        # site specific
+        LD_MATH=-lm
+
+    CentOS 5.2 Linux uila 2.6.18-92.1.17.el5 #1 SMP x86_64
+        LDMHOME=/export/uila4/datafeeds/ldm
+        MCIHOME=/export/uila4/unidata/mcidas
+        CC=gcc
+        CPPFLAGS=-DNDEBUG -Df2dFortran
+        FC=g77
+        FFLAGS=-O -Wuninitialized -fno-automatic
+        CPP_LDM=-I${LDMHOME}/include
+        LD_LDM='-L${LDMHOME}/lib -lldm'
+        CPP_MCIDAS=-I${MCIHOME}/inc                            # site specific
+        LD_MCIDAS='-L${MCIHOME}/lib -lmcidas'                  # site specific
+        CPP_NETCDF=-I${MCIHOME}/include                        # site specific
+        LD_NETCDF='-L${MCIHOME}/lib -lnetcdf'                  # site specific
+        LD_MATH=-lm
+
+    OpenSUSE Linux 2.6.22.19-0.2-default #1 SMP i686 athlon i386 GNU/Linux
+        CC=gcc
+        CFLAGS=-O
+        CPPFLAGS='-DNDEBUG -Df2cFortran'
+        FC=gfortran
+        FFLAGS=-O
+        CPP_LDM=-I/home/ldm/include
+        LD_LDM='-L/home/ldm/lib -lldm'                         # site specific
+        CPP_MCIDAS=-I/home/mcidas/inc                          # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                # site specific
+        CPP_NETCDF=-I/home/mcidas/include                      # site specific
+        LD_NETCDF='-L/home/mcidas/lib -lnetcdf'                # site specific
+        LD_MATH=-lm
+
+    Ubuntu 7.04 Linux rich 2.6.20-16-generic #2 SMP i68 6GNU/Linux
+        CC=gcc
+        CFLAGS=-O
+        CPPFLAGS='-DNDEBUG -Df2cFortran'
+        FC=gfortran
+        FFLAGS=-O
+        CPP_LDM=-I/home/ldm/include
+        LD_LDM='-L/home/ldm/lib -lldm'                         # site specific
+        CPP_MCIDAS=-I/home/mcidas/inc                          # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                # site specific
+        CPP_NETCDF=-I/home/mcidas/include                      # site specific
+        LD_NETCDF='-L/home/mcidas/lib -lnetcdf'                # site specific
+        LD_MATH=-lm
+
+    SunOS zero 5.9 Generic_122300-31 sun4u sparc SUNW,Ultra-4
+        CPPFLAGS=
+        CC=/opt/SUNWspro/bin/cc
+        CFLAGS=-O
+        FC=/opt/SUNWspro/bin/f77
+        FFLAGS=-O
+        CPP_LDM=-I/usr/local/ldm/include
+        LD_LDM=-L/usr/local/ldm/lib -lldm
+        CPP_MCIDAS=-I/home/mcidas/inc                           # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+        CPP_NETCDF=-I/home/mcidas/include                       # site specific
+        LD_NETCDF='-L/home/mcidas/lib -lnetcdf'                 # site specific
+
+    SunOS lenny 5.10 Generic_137112-07 i86pc i386 i86pc (32-bit)
+        Using:
+        Sun C 5.9 SunOS_i386 Patch 124868-06 2008/06/24
+        Sun Fortran 95 8.3 SunOS_i386 Patch 127002-04 2008/04/16
+
+        CC=cc
+        CFLAGS=-O
+        CPPFLAGS=-DNDEBUG
+        FC=f77
+        FFLAGS=-O
+        CPP_LDM=-I/usr/local/ldm/include
+        LD_LDM=-'L/usr/local/ldm/lib -lldm'
+        CPP_MCIDAS=-I/home/mcidas/include/src                   # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+        CPP_NETCDF=-I/home/mcidas/solarisx86/include            # site specific
+        LD_NETCDF='-L/home/mcidas/solarisx86/lib -lnetcdf'      # site specific
+

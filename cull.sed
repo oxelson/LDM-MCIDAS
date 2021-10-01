@@ -1,0 +1,2 @@
+/.*Entering.*/d
+/.*Leaving.*/d

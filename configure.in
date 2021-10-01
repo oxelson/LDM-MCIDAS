@@ -1,0 +1,64 @@
+dnl $Id: configure.in,v 1.24 1997/12/23 20:02:19 steve Exp $
+dnl
+dnl Process this file with GNU autoconf(1) to produce a configure script.
+dnl
+AC_INIT(decode)
+UC_INIT
+
+UC_DEFAULT(CPPFLAGS,)
+UC_DEFAULT(CFLAGS,-O)
+UC_DEFAULT(FFLAGS,-O)
+
+UC_PREFIX(..)
+
+UC_ENSURE(PORT_MANIFEST, udqueue.c udqueue.h udfifo.c udfifo.h \
+	  udalloc.c udalloc.h inetutil.c inetutil.h)
+UC_PORT_ULOG
+
+AC_PROG_RANLIB
+UC_PROG_FC
+UC_PROG_CPP
+UC_PROG_NEQN
+UC_PROG_TBL
+
+UC_LDM
+
+UC_UDPOSIX
+dnl UC_UDPOSIX_LIMITS
+UC_UDPOSIX_STDDEF
+UC_UDPOSIX_STDIO
+UC_UDPOSIX_STDLIB
+UC_UDPOSIX_STRING
+UC_UDPOSIX_TIME
+UC_UDPOSIX_REGEX
+
+UC_CPP_MCIDAS
+UC_LIB_MCIDAS
+UC_CPP_NETCDF
+UC_LIB_NETCDF
+UC_LIB_X11
+UC_LIB_MATH
+UC_LIB_RPC
+UC_LIB_SOCKET
+
+UD_LIB_DL
+
+UD_CFORTRAN
+UD_LIB_FORTRAN
+
+UC_VERSION
+UC_FTPDIR(pub/ldm-mcidas)
+
+case `uname -s` in
+    OSF1)
+	UC_ENSURE(FFLAGS, -nofor_main)
+	UC_ENSURE(CFLAGS, -std)
+	;;
+esac
+
+UC_FINISH( \
+    Makefile \
+    decode/Makefile \
+    libpng/Makefile \
+    zlib/Makefile \
+)

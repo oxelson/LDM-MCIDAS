@@ -1,0 +1,724 @@
+VERSION	COMMENTS
+-------	-------------------------------------------------------------
+
+2012    2012-01-18
+
+        Updated version number to 2012 to reflect small updates (e.g.,
+        new src/port/cfortran/cfortran.h, modified src/decode/Makefile)
+        and that the package is still viable.
+
+2008    2009-04-30
+
+        Note: The version number is kept at 2008 since McIDAS went
+        into maintenance mode with v2008.
+
+        A variety of changes to C routines, Makefiles and test data
+        files.
+
+        Introduction of a new McIDAS lightning decoder, 'lgt2md', that
+        handles both NLDN binary and USPLN ASCII data record formats.
+        'lgt2md' is designed as a drop-in replacement for 'nldn2md':
+        user's pattern action file entries for decoding NLDN data
+        can be easily updated by replacing 'nldn2md' with 'lgt2md'.
+
+        ROUTE.SYS (distributed as route.sys) was updated to include
+        a new product, 'LP', for USPLN lightning data.
+
+        The Makefile in the src/decode directory was reorganized to
+        build the subset of the encoders/decoders contained in the package
+        that are written entirely in C:
+
+        area2png    - PNG-compresses the image portion of single-banded
+                      McIDAS AREA files
+        pnga2area   - uncompresses images created by 'area2png'
+        zlibg2gini  - uncompresses the Zlib-compressed images contained
+                      in the NOAAPort broadcast (and conveyed in the
+                      IDD in the NIMAGE feed)
+        pngg2gini   - uncompress NOAAPort images that have been
+                      PNG-compressed by the Unidata NOAAPort ingest
+                      package (archaic)
+        proftomd    - decodes wind profiler netCDF files from NOAA/GSD
+                      into McIDAS MD format files
+        lgt2md      - decodes NLDN and USPLN lightning data into
+                      McIDAS MD files
+
+        This set is built by running 'make' or 'make basic'.
+        
+        In addition to this set, the Fortran-based 'nldn2md' NLDN
+        lightning decoder will be built by 'make full'.
+
+        The Makefile in src/decode also provides for the (attempted)
+        building of archaic McIDAS decoders:
+
+        cdftomd     - decodes wind profiler netCDF files from NOAA/GSD
+                      into McIDAS MD format files (use 'proftomd' instead)
+        gunrv2      - decodes compressed McIDAS GRID files sent in the
+                      old Zephyr/Alden satellite broadcast into McIDAS
+                      GRID format
+        lwfile
+        lwtmd2      - decodes compressed McIDAS MD files sent in the
+                      old Zephyr/Alden satellite broadcast into McIDAS
+                      MD format
+        lwtoa3      - decodes delta-compressed McIDAS image files from
+                      the old Zephyr/Alden satellite broadcast into McIDAS
+                      AREA format
+        nids2area   - converts Nexrad Level III images into McIDAS
+                      AREA file format (best to use McIDAS IMGCOPY from
+                      NEXR to AREA datasets directly as McIDAS capabilities
+                      are kept up to date)
+ 
+        In addition decoders built by 'make full', an attepmt will be
+        made to build these decoders when the user runs 'make all'.
+        There is _no_ guarantee that these decoders will be built
+        successfully!
+
+2004    2004-09-14
+
+        Added O_TRUNC flag to mkdirs_open call in pnga2area.c,
+        pngg2gini.c, and zlibg2gini.c.  This corrects a problem
+        encountered when decoding Unidata-Wisconsin images (IDD
+        feedtype UNIWISC aka MCIDAS) when using McIDAS routing table
+        (ROUTE.SYS) concepts.  The problem was manifested in decoded
+        image files keeping the size of the images they were
+        overwriting.  So, the file size was always the "high water
+        mark" of sizes for the products.
+
+        NOTES:
+        - this did not affect the sizes of files decoded without using
+          McIDAS routing table concepts
+        - the decoded images using McIDAS routing table concepts were
+          valid/usable even though they are larger than they need to
+          be
+
+        Changed IDD datastream name from MCIDAS to UNIWISC in example
+        pqact.conf files.
+
+        Updated distribution with the versions of SATANNOT, SATBAND,
+        and SCHEMA from the latest Unidata McIDAS distribution, v2004.
+
+        Cleaned up batch.k shell script that runs McIDAS postprocess
+        BATCH files.  Internal comments should now be easier to follow
+        than in previous versions.
+
+        Updated man pages for currently used decoders: area2png(1),
+        nldn2md(1), pnga2area(1), pngg2gini(1), proftomd(1), and
+        zlibg2gini(1).
+
+        Removed building of decoders now considered to be obsolete:
+        cdftomd(1), lwtoa3(1), gunrv2(1), lwfile(1), lwtmd2(1),
+        and nids2area(1).  Source code for these decoders is still
+        included in the distribution, but their use is not guaranteed
+        mainly since subroutines they use from the McIDAS library
+        are no longer supported.
+
+2003    2003-07-29
+
+        Added utililty routine zlibg2gini that uncompresses Zlib
+        compressed GINI images in NIMAGE IDD datastream.
+
+        Fixed a bug that kept McIDAS routing table, ROUTE.SYS,
+        dates and times from being updated.
+
+2002    2002-12-20
+
+        Replaced information messages in pngg2gini.c that referred to
+        pnga2area with pngg2gini.
+
+        Corrected logic in pnga2area.c for processing a product whose
+        product code is not contained in the McIDAS routing table,
+        ROUTE.SYS.  Before, the routing table would get corrupted
+        and the AREA file number included in the '-r pcode,anum'
+        flag would not be used.  Now, the routing table will not
+        be updated for unregistered products, and the default AREA
+        file number will be used.
+	
+        Added a test in Makefile.in for unPNG compressing an image
+        using the '-r pcode,anum' syntax when the product code, pcode,
+        is not contained in the McIDAS routing table.
+
+        Added enties for CIMSS Wildfire ABBA images in McIDAS routing
+        table (product codes CG -> Northern Hemisphere WF_ABBA;
+        CH -> Southern Hemisphere WF_ABBA).
+
+        Cleaned up logic in getrte_ module in pngsubs.c and cdfsubs.c.
+
+        Changed 'mkstemp' call back to 'mktemp' in proftomd.c.  'mkstemp'
+        was causing creation of zero length files in the directory from
+        which the LDM was started from (pattern .tmp_netcdf.XXXXXX).
+
+        Added example pqact.conf entries for CILSS Wildfire ABBA
+        images in ldm-mcidas-pqact.conf.
+
+        Cleaned up LD_LIBRARY_PATH line in batch.k.
+
+        Changed version number to match current McIDAS release that
+        the package is linked against.
+
+7.8.0   2002-04-08
+        Incorporated zlib 1.1.4 and PNG 1.2.1 libraries.  Zlib library
+        was updated due to security alert about older zlib versions
+        in spring of 2002.
+
+        Added new PNG compressed GINI decoder, pngg2gini.  Updated
+        distribution with test file and man page for pngg2gini.
+
+        Binary distributions are built linking against Unidata McIDAS
+        Version 7.8.x.
+
+7.6.4   2000-07-21
+        Corrected problem in pnga2area: udebug was being called before
+        system logging was setup.
+
+        Corrected problem in ldm-mcidas-pqact.conf: two of the nids2area
+        entries had lines that were split at the 80 character mark.  This
+        will cause 'ldmadmin pqactcheck' to report a problem with these
+        actions.
+
+7.6.3   2000-06-20
+        Updated delta-encoded AREA file decoder, lwtoa3, to read stdin
+        until EOF after image decoding is complete.  This traps a problem
+        seen mainly with Mollweide imagery (10.7 um and 6.8. um (Water Vapor))
+        imagery where there is extraneous bytes sent in the LDM product
+        after the image data.  ** NOTE ** delta encoded images will be
+        replaced by PNG encoded images in the Unidata-Wisconsin datastream
+        in June/July of 2000.
+
+        Developed new PNG compression and uncompression routines for
+        imagery in McIDAS AREA file format.  The PNG compressed form
+        can be converted back into AREA files with the pnga2area
+        decoder.  AREA files can be compressed into PNG form using
+        the area2png encoder.  Added zlib and PNG lib directories
+        to the ldm-mcidas distribution.  The PNG encoder/decoder
+        link against both the libz.a and libpng.a libraries.  The
+        source for the new encoder and decoders is contained in
+        area2png.c, pnga2area, and pngsubs.c.  Man pages for these
+        routines are available as area2png.1 and pnga2area.1.
+
+        Added McIDAS-X satellite annotation, SATANNOT, and satellite
+        band, SATBAND, information files to the distribution.  These
+        files are needed by the PNG encoder, area2png, and decoder,
+        png2area routines.  Their fully qualified pathnames are specified
+        to the encoder/decoder using the '-a SATANNOT_pathname' and
+        '-b SATBAND_pathname' flags.  (SATANNOT_pathname is the fully
+        qualified pathname to the SATANNOT file: example:
+        /usr/local/ldm/etc/SATANNOT; and SATBAND_pathname is the fully
+        qualified pathname to the SATBAND file: example:
+        /usr/local/ldm/etc/SATBAND).
+
+        Added a test data file for the PNG decoder routine, pnga2area.
+        Updated the McIDAS routing table, ROUTE.SYS, and System Key
+        Table, SYSKEY.TAB, with entries for PNG compressed CIMSS imagery
+        products that were added to the Unidata-Wisconsin data stream.
+        Updated example LDM pattern action file, ldm-mcidas-pqact.conf,
+        with entries for PNG compressed CIMSS imagery products.
+        
+7.6.2	2000-01-18
+        Added NLDN and FSL profiler test files into manifest of test files.
+        The lack of these files caused failures in 'make test'.
+
+7.6.1	1999-08-17
+        Corrected typos in route post process shell script, batch.k
+        (MDATA -> MCDATA and PATH=$MCGUI:... -> PATH=${MCGUI}:...)
+
+7.6.0	1999-08-08
+        Updated schema files for NLDN (DCNLDN), and profiler (DCWPRO and
+        DCWPR6) for Y2K capablility (date converted from SYD to CYD).
+
+        Updated FSL2 wind profiler decoder 'proftomd' to be able to
+        read/write ROUTE.SYS and SYSKEY.TAB and to use Y2K capable
+        date format (CCYYDDD).
+
+        Updated NLDN (nldn2md) and NIDS (nids2area) decoders to use
+        Y2K capable McIDAS 7.[456] time functions.
+
+        Added NLDN test file to distribution.  Added running NLDN decode
+        test to decode/ Makefile.
+
+        Added Bourne shell script 'uwgrid.sh' that can be used to recreate
+        the NG and NF GRID products that were in the Unidata-Wisconsin
+        datastream from XCD decoded grids.
+
+        Updated with new version of route.sys, syskey.tab and SCHEMA.
+
+        Updated 'batch.k' to be more modular and have current SUNWspro
+        references.
+
+        Removed checking for LDM regular expression library.  LDM versions
+        5.08 and above no longer include Henyr's Spencer's regular
+        expression package.
+
+        Removed building of 'readit' file.  This was used in McIDAS-X
+        2.102 systems which are no longer supported.
+
+        Removed 'batch.mx' script from MANIFEST of decoders/ Makefile.
+        This was used in McIDAS-X 2.102 systems which are no longer
+        supported.
+
+        Commented out GRID, MD, and TEXT entries in 'ldm-mcidas-pqact.conf'.
+        These products were removed from the Unidata-Wisconsin datastream
+        on 19990701.
+
+7.4.0	1998-11-10
+		Made handling of I/O errors by decode/nids2area more 
+		robust.  This should eliminate the bug wereby the
+		program sometimes crashed after seeing a "bad radial".
+
+		Updated with new versions of route.sys, syskey.tab, and SCHEMA.
+
+		Modified Makefile so binary release will contain SCHEMA in etc.
+
+		Fixed typos in ldm-mcidas-pqact.conf.
+
+		Added test data sets for FSL2 hourly summary and 6-minute profiler data.
+
+		Fixed fclose(stream) bug in cdftomd.c.
+
+		Removed lwi, lwo, lbi, and lbo routines from csubs.c.  These
+		are not needed for McIDAS-X 7.10 or 7.40.
+
+7.1.3	1997-12-23
+		This release associates with McIDAS-X release 7.10.
+
+		Added new decoder, proftomd(1).  This addition is
+		defined by the set of routines: proftomd.c, cdfsubs.c,
+		decode_fsl1.c, decode_fsl2.c, decode_ncprof.c,
+		mkdirs_open.c, vapor_pres.c, profiler.1, and DCWPR6.
+		proftomd handles both the FSL hourly and 6-minute
+		netCDF datasets.  It can be used with either the
+		Unidata-Wisconsin datastream wind profiler netCDF
+		or the wind profiler netCDFs in the FSL2 datafeed.
+
+		Modified the hourly summary FSL wind profiler schema
+		(in DCWRPO and SCHEMA )to reduce the number of rows
+		from 50 to 35.
+
+		Changed line 300 of nids2area.f "AUXBLK(19) = '    '"
+		to "AUXBLK(19) = LIT('    ')".  The previous syntax
+		fails on AIX 4.2.
+
+		Modified build procedures to ensure success on systems
+		listed in INSTALL file.
+
+7.1.2	1997-04-21
+                Fixed typo in sprintf() function in c_edest() in
+                csubs.c.  The typo would result in bogus values being
+                printed as the numeric part of edest calls.
+
+7.1.1	1996-01-23
+		Ported to Red Hat Linux 2.0.18.
+
+7.1.0	1996-01-15
+                Changed release numbering scheme to conform to McIDAS
+                release numbering scheme.
+
+		Made FORTRAN library statically linked to elminate
+		incompatability problems with our clients.
+
+		Added ld(1) reference to dynamic-link library (`-ldl')
+		on SunOS 5 system because the McIDAS routines use it.
+
+		Converted to McIDAS version 7.00 and above.  NB: This
+		means that this version of the package *cannot* be
+		linked against McIDAS version 2.102 and previous.
+
+		cdftomd(1) utility modified to be compatible with 64-bit
+		systems (e.g. Digital UNIX).
+
+2.6.2	1996-10-18
+		Updated nids2area examples in ldm-mcidas-pqact.conf by
+		adding a -close to the PIPE action.  This is crutial
+		for correct execution of nids2area!
+
+		Corrected a typo in the example for setting CPP_MCIDAS
+		in INSTALL
+
+2.6.1	1996-10-11
+		Updated nids2area decoder to handle precipitation
+		products sent both in raster and radial formats.
+
+		Modified cdf2md decoder to update SYSKEY.TAB with actual
+		time in observation.
+
+		Modified nldn2md decoder to update SYSKEY.TAB with time
+		of last flash received.
+
+		Updated SCHEMA, SYSKEY.TAB, and ROUTE.SYS to McIDAS-X
+		version 7.000.
+
+		Updated README.PP and batch.mx to included use of
+		McIDAS-X version 2.102 (and later) use of MCPATH.
+
+		Modified makefile in decode/ subdirectory to install
+		ROUTE.SYS and SYSKEY.TAB in etc/ installation directory
+		to support binary distributions.
+
+2.6	1996-05-10
+		Moved FSL netCDF to MD converter, cdftomd, from McIDAS-X
+		distribution to ldm-mcidas package.  Included make test
+		target for this new decoder.
+
+		Added tests for three new NIDS products: BRLR1 (248 nm Base
+		Reflectivity), SRMV1, SRMV2 (Storm Relative Mean Velocity,
+		at radar tilts 1 & 2).
+
+		Moved McIDAS-X ROUTE PostProcess hack (allows ldm-mcidas
+		decoders to kick off ROUTE PostProcess BATCH files IF
+		a McIDAS-X session is running on the same machine as the
+		LDM): README.PP, batch.mx, readit.c
+
+		Added schemas for FSL Wind Profiler meteorological (DCWPRO)
+		and antenna (DCBPRO) data.
+
+		Updated all man pages to reflect current release of decoders
+		and LDM.
+
+		Updated McIDAS routing table (in route.sys) to reflect
+		with files in Unidata-Wisconsin broadcast and products
+		created by McIDAS-X ROUTE PostProcess BATCH files.
+
+		Updated annotated example of LDM pqact.conf file
+		(ldm-mcidas-pqact.conf).
+
+2.5	1996-04-29
+                Ported to version 2.102 of McIDAS-X.  Due to changes in
+                the code, this package will not work with older versions
+                of McIDAS-X.
+
+                Removed LDM ingester from distribution.  This
+                functionality is now satisfied by the OS/2 `mcldm'
+                utility and the XCD functionality of version 2.102 of
+                McIDAS-X.
+
+2.4.4	1996-03-26
+		Corrected port/pthreads/* targets in configuration 
+		(`pthread/' corrected to `pthreads/').
+
+2.4.3	1996-03-19
+		Added missing port/pthread/* files.
+
+		Modified port/ makefiles.
+
+2.4.2	1995-10-30
+		nldn2md(1):
+                    Added macro definition of pi to wsiinput.c to
+		    increase portabiliby.
+
+		    Made read-timeout more robust by changing mechanism
+		    to one of installing/deinstalling the alarm handler.
+
+		nids2area(1):
+		    Made read-timeout more robust by changing mechanism
+		    to one of installing/deinstalling the alarm handler.
+
+		Misc:
+		    Updated NIDS entries in example LDM pqact(1) 
+		    configuration file, decode/ldm-mcidas-pqact.conf.
+
+		    Ported to AIX 4.1 and autoconf 2.3.
+
+		    Ported to new port/ subdirectory structure.
+
+2.4.1	1995-03-09
+		Decoders:
+                    Ported to McIDAS-X 2.005.  This version of
+                    McIDAS X, unlike previous versions, uses the
+                    trailing-underscore convention for FORTRAN global
+                    symbol names under AIX.
+
+		    Added example pqact(1) configuration file to
+		    installation.
+
+2.4	1995-02-15
+		mctingest(1):
+                    Adapted "assert.h" to new "udposix.h".  It
+                    misbehaved if the compiler didn't support hash-style
+                    stringization.
+
+		nldn2md(1):
+		    Replaced use of GMTIME with McIDAS SKHMS for 
+		    portability.
+
+		nids2area(1):
+		    New LDM-compatible decoder for NIDS image products.
+
+		Installation:
+		    Added support for those environments that don't declare
+		    fgetc(3) in <stdio.h> (e.g. SunOS 4.1.3 and either 
+		    /bin/cc or gcc).
+
+                    Removed `port/install' from action of `make all' to
+                    allow different build and install users.
+
+		    Ported to gcc(1) under SunOS 5.3.
+
+		    Updated INSTALL document.
+
+2.3.2	1994-12-21
+		mctingest(1):
+                    Added check of NULLPROC transaction status used to
+                    flush HEREIS and COMINGSOON/BLKDATA transactions.
+
+		    Changed action of TERM and QUIT signals:  will no
+		    longer dump core (use ABRT for that).
+
+		Documentation:
+		    Corrected name of program in lwfile(1) manual page.
+
+		    Added examples to mctingest(1) manual page.
+
+		Installation:
+		    Removed single-threaded but multi-process `mcingest'
+		    from distribution because it's no longer supported.
+
+		    Made separate `all' and `install' targets for
+		    ingester and decoders: `ingester', `decoders',
+		    `ingester_install', & `decoders_install'.
+
+                    Changed rule for making source distribution: added
+                    top-level `src/' directory to support a more
+                    package-oriented distribution.
+
+		    Removed references to `test' target from INSTALL
+		    file.
+
+		    Ported to IRIX 5.2 and HP-UX A.09.05.
+
+		    Adapted release engineering to autoconf 2.1.
+
+2.3.1	1994-10-20
+		mctingest(1):
+                    Bug fix: reading from standard input caused SIGSEGV.
+
+                    Bug fix: would daemonize itself even if reading from
+                    standard input.
+
+		Documentation:
+                    Removed no-longer-allowed argv[0] field from PIPE
+                    entries in the LDM configuration-file examples.
+
+2.3	1994-09-27
+		General:
+		    Removed ulog(3) module from distribution: corrects
+		    problem with logging on Solaris platforms.
+
+		lwtoa3(1):
+                    Modified to use McIDAS LWTOA3 library subroutine
+                    rather than home-grown one.  Allows decoding of
+                    products containing calibration codicils (e.g. new
+                    Wetnet browse imagery).
+
+		nldn2md(1):
+		    Corrected log message printed when end-of-file
+		    reached.
+
+2.2.4	1994-07-26
+		mctingest(1):
+                    Ensured portability to ULTRIX 4.[34] and AIX 2.3.
+                    (NOTE: The LDM-compatible decoder portion of the
+                    LDM-McIDAS package is useless under ULTRIX because
+                    the prerequisite McIDAS library isn't supported on
+                    that platform.)
+
+		    Ensured that no LDM-destined product will have a zero-
+		    valued cookie.
+
+		    Added use of environment variable LDMHOSTNAME to 
+		    hostname-resolution procedure.
+
+2.2.3   1994-06-08
+                Decoders:
+                    Added support for being exec(2)ed by pqact(1), which
+                    sets SIGALRM handling to SIG_IGN.
+
+		nldn2md.f:
+		    fixed update of ROUTE.SYS and SYSKEY.TAB
+
+		mctingest(1):
+		    Fixed invalid memory-reference bug following
+		    decision to use longer trailer F0 packet as product
+		    identifier.  Might have caused problems following
+		    `Using longer trailer' log message.
+
+2.2.2	1994-05-02
+		Configuration:
+		    Added commentary about CPP_MCIDAS to INSTALL.
+
+		mctingest(1):
+		    Increased stack sizes for threads under Solaris 2.3
+		    to avoid segmentation violation.
+
+		nldn2md(1):
+		    Added section to nldninput.c to check for NLDN product 
+		    header.
+
+		nldn2md.1:
+		    Added more explanation to DIALPROD keyword section.
+
+2.2.1	1994-04-26
+		nldn2md(1):
+		    Corrected type definition of function GETRTE.
+		    Added IMPLICIT NONE to force type definitions of all
+		    variables.
+		    Added updating of ROUTE.SYS by CALL FSHRTE.
+		    Changed timeout value in nldninput.c to 60 seconds 
+		    (from 600).
+
+		nldn2md.1:
+		    Corrected example ldmd.conf nldn2md invocation line.
+		    Noted that the day and time parameters on the DIALPROD
+		    keyword are optional.
+		    Increased explanation of DIALPROD keyword options.
+
+2.2	1994-04-25
+		nldn2md(1):
+		    This new, LDM-compatible decoder added.  It decodes
+		    data records containing stroke information from National
+		    Lightening Data Network into McIDAS MD files.
+
+		mctingest(1):
+		    Added '-r' option (reopen input feed on EOF).
+
+                    Made handling of SIGUSR1 (report status) and SIGUSR2
+                    (change logging level) into separate, low-level
+                    threads.
+
+                    Stopped writing of log messages to console as
+                    last resort due to apparent interference with FSU's
+                    Pthreads package for SunOS 4.
+
+		    Split "keep alive" thread for McIDAS workstations
+		    into one thread per workstation.
+
+		    Corrected logic bug that caused hanging upon failure
+		    to send to a McIDAS workstation.
+
+		    Modified tty input module to send START character if
+		    nothing received for 255 seconds.  Hopefully, this
+		    will reset hung buffer boxes.
+
+		    Set McIDAS socket to reuse port number, greatly 
+		    reducing the time to reconnect.
+
+		    Made write(2)s to McIDAS workstations more robust.
+
+		    Known Bugs:
+                        When compiled with assertions enabled, the
+                        program often aborts under SunOS 5 (alias
+                        Solaris 2) due to the variable `initialized'
+                        in file `port/uthread.c' being mysteriously
+                        cleared.  This puzzling behavior is, as yet, not
+                        understood and there is no workaround.
+
+		misc:
+		    Removed or supported a couple of Standard C'isms
+		    that SunOS 4's /bin/cc couldn't handle.
+
+		    Ported configuration mechanism to SunOS 5.3.
+
+2.1	1993-12-07
+		mctingest(1):
+		    Fixed handling of SIGUSR2.
+
+                    Enhanced `-f' and `-h' options to accept comma- or
+                    space-separated list of destination names.
+
+                    Added `-m' option to serve McIDAS workstations.
+
+		    Added `-i' option to set software input flow control 
+		    mode for tty.
+
+		    Corrected default queue size in manual page.
+
+                    Converted to version 1.20 of FSU's PTHREADS package.
+
+		    Strengthened unique cookie generation for COMINGSOON
+		    products.
+
+		    Added detection of F0 header/trailer packet identifier
+		    mismatch and use of longer one.
+
+		decoders (gunrv2, lwfile, lwtoa3, lwtmd2):
+		    Added timeout funtionality to handle non-delivery of
+		    end of data product by LDM.
+
+		    Improved handling of success/failure logic in lwfile
+		    and lwtoa3.
+
+		misc:
+		    Modified ulog(3) to use UTC by default.
+
+		    Enhanced makefile's "test" target.
+
+2.0.1	1993-09-08
+		Bug fixes:
+		    SunOS 4.1.3 SC1.0/cc and /usr/ucb/cc support:
+			Added missing `;'s to typedefs in port/signal.h.in.
+			Changed c_getrec() definition in decode/mc_proto.c 
+			    to non-prototype version.
+			Added portable memmove() to port/.
+			Moved `-I.' in tingest/Makefile to before LDM 
+			    reference.
+			Moved #defines outside shipper_destroy() prototype.
+			Removed atexit() return test from decode/main.c.
+
+		    Added Glenn's ulog(3) fixes.
+
+		Added port/usleep.c to avoid linking against
+		    /usr/ucblib/libucb.so under Solaris 2 (SunOS 5).
+
+2.0	1993-09-07
+		General:
+		    Modified the LDM ingester and decoders to include and
+		    expect, respectively, McIDAS F0 header and trailer
+		    packets in the McIDAS data product stream.  As a
+		    consequence, the ingester and decoders in this
+		    distribution will not interoperate with older ones and,
+		    in particular, *** ALL LDM-McIDAS DECODE LINES IN THE
+		    LDM's PATTERN/ACTION FILE (e.g. ldmd.conf) MUST BE
+		    CHANGED. *** See one of the decoder manual pages for
+		    the new format (e.g. decode/lwtoa3.1).
+
+		mctingest(1):
+		   Created new, multi-threaded LDM ingester for McIDAS
+		   data stream.  It's far more robust and efficient than
+		   mcingest(1).  Currently available under SunOS and ULTRIX
+		   only (will be available under AIX soon after we obtain
+		   the AIX PTHREADS package).
+
+		mcingest(1):
+		    Changed "done" message to "sent" and "unsent".
+		    Moved "sending" message from f0.c to sink.c so that
+			sender PID could be printed.
+		    Added test for excess number of arguments.
+		    Added F0-packet record-length option (`-r').
+		    Made statistics reporting format invariant across 
+			invocation options.
+		    Changed usage message to report default number of
+			senders in terms of regular files and everything
+			else.
+		    Changed SIGUSR2 action to rotate through 3 modes of
+			low-level logging rather than toggling between 2.
+
+		decoders:
+		    Modified all of them to (optionally) read from a file
+			and (optionally) delete it at exit in order to prevent
+			a slow decoder from adversely affecting an invoking
+			LDM.
+		    Removed extraneous (and incorrect) deccmd() function
+			prototype from main.fc.
+
+		Configuration and installation:
+		    Renamed HISTORY file to RELEASE_NOTES.
+		    Removed file MANIFEST from the distribution.
+		    Added CPP_LDM and LD_LDM to missing values checklist.
+		    Modified ln(1) usage in decode/Makefile.in to accomodate
+			SGI's IRIX.
+
+1.1	1993-03-03
+		Corrected mcingest(1) usage message (default number of
+		attempts and default bitrate were switched).
+
+		Added `-d datadir' option to decoders.
+
+1.0	1993-03-01
+		Initial Release

@@ -1,0 +1,175 @@
+." $Id: area2png.1,v 1.0 2004/09/16 10:00:00 yoksas Exp $
+.TH AREA2PNG 1 "2004/09/16 10:00:00 $"
+.SH NAME
+area2png \- PNG compression routine for image data in McIDAS AREA
+file format
+
+.SH SYNOPSIS
+.HP
+.ft B
+area2png
+.nh
+\%[-a\ \fISATANNOT\fP]
+\%[-b\ \fISATBAND\fP]
+\%[-f\ \fIAREAfile\fP]
+\%[-n\]
+\%[-v]
+\%[-x]
+\%[-l\ \fIlogpath\fP]
+\%\fIPNGfile\fP
+.hy
+.ft
+
+.SH DESCRIPTION
+.LP
+This program is an LDM encoder for McIDAS data of type \fBAREA\fP:
+it reads a McIDAS AREA file and outputs a PNG compressed file that
+is composed of the AREA file header(s) followed by AREA file comment
+cards followed by compressed image information.
+.LP
+This program is typically run before injecting imagery into the Unidata
+IDD.
+
+.SH FLAGS
+.TP
+.BI "-a " SATANNOT
+McIDAS satellite description file, SATANNOT, pathname (default: /home/mcidas/data/SATANNOT).
+.TP
+.BI "-b " SATBAND
+McIDAS satellite band description file, SATBAND, pathname (default: /home/mcidas/data/SATBAND).
+.TP
+.BI "-f " AREAfile
+Input AREA pathname (required: no default).
+.TP
+.B "-h "
+Print help information, then exit the program.
+.TP
+.B "-n "
+Echo the output file name to stdout (default=no).
+.TP
+.B -v
+Verbose logging.
+Informative messages (level LOG_INFO) are logged.
+By default, only messages of severity LOG_NOTICE and greater are
+logged. See the Unidata  LDM Site  Manager's  Guide  for more information on 
+message logging.
+.TP
+.B -x
+Debug logging.
+Debugging messages (level LOG_DEBUG) are logged. See the Unidata  LDM Site  
+Manager's  Guide  for more information on message logging.
+.TP
+.BI "-l " logpath
+Log file pathname.
+The program uses Unidata's \fBulog\fP(3) package to write error and diagnostic
+messages.
+The default is to write to the \fBsyslogd\fP(8) daemon.  If this option is
+specified, however, then messages will be written to the file
+\fIlogpath\fP unless that pathname is "-", in which case all messages will be
+written to standard error.
+.TP
+.BI "PNGfile "
+Output PNG pathname mask (required: no default).
+.sp
+PNGfile may contain 'replaceables':
+  \\BAND - band information from SATBAND
+  \\RES  - resolution information from SATBAND
+  \\SAT  - satellite platform information from SATANNOT
+.sp
+and 'strftime' style day/time specifiers that will get resolved by image
+day/time information:
+  %%Y    - image year       [CCYY]
+  %%m    - image month      [MM]
+  %%d    - image day        [DD]
+  %%j    - image Julian day [JJJ]
+  %%H    - image hour       [HH]
+  %%M    - image minute     [MM]
+  etc.
+
+.SH EXAMPLES
+Typical command invocations might look like:
+.sp
+.ta 8n +8n +8n
+.nf
+##
+# Example 1:
+#
+#   System has McIDAS-X Version 7.6 or higher installed in the
+#   'mcidas' account under /home/mcidas.
+#
+#   The file to be comressed is /data/mcidas/AREA1234.
+#
+#   The user wants to put the compressed output into the file
+#   'pngarea' in the current directory.
+#
+#   Informational notices are logged by the system daemon, syslogd
+#   to its standard location for local0.
+
+area2png -f /data/mcidas/AREA1234 pngarea
+
+##
+# Example 2:
+#
+#   User has put the copies of SATANNOT and SATBAND that are
+#   distributed with ldm-mcidas into the /home/ldm/etc directory.
+#
+#   The file to be comressed is /data/mcidas/AREA1234.
+#
+#   The user wants to put the compressed output into the file
+#   'pngarea' in the current directory.
+#
+#   Informational notices are logged to the users session.
+#
+
+area2png -a /home/ldm/etc/SATANNOT -b /home/ldm/etc/SATBAND
+         -f /data/mcidas/AREA1234 -vl- pngarea
+
+##
+# Example 3:
+#
+#   System has McIDAS-X Version 7.6 or higher installed in the
+#   'mcidas' account under /home/mcidas.
+#
+#   The file to be comressed is /data/mcidas/AREA1234.
+#
+#   The user wants to save the compressed data in a file whose
+#   name is dictated by by information in the AREA file header
+#   and the files SATANNOT and SATBAND.
+#
+#   Informational and debug notices are logged to the users session.
+#
+
+area2png -f /data/mcidas/AREA1234 -xl- \SAT_\BAND_\RES_%Y%m%d.%H%M
+
+The output file name from such an invocation might look like:
+
+GOES-8_IMG_10.7um_4km_200000613.1215
+
+##
+# Example 4:
+#
+#   System has McIDAS-X Version 7.6 or higher installed in the
+#   'mcidas' account under /home/mcidas.
+#
+#   The file to be comressed is /data/mcidas/AREA1234.
+#
+#   The user wants to save the compressed data with a pathname
+#   whose directory components are dictated by information
+#   in the AREA file header and the files SATANNOT and SATBAND.
+#
+#   Informational, debugging, and verbose logging is made to
+#   the user's session.
+#
+
+area2png -f /data/mcidas/AREA1234 -vxl- \SAT/\RES/\BAND/\BAND-%Y%m%d.%H%M
+
+The output file pathname from such an invocation might look like:
+
+GOES-8_IMG/4km/10.7um/10.7um-200000613.1215
+.fi
+.RE
+.SH "SEE ALSO"
+.LP
+.BR ldmd (1),
+.BR ulog (3),
+.BR syslogd (8).
