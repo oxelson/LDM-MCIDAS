@@ -1,0 +1,156 @@
+20020316
+
+            ldm-mcidas ROUTE PostProcess BATCH File Execution
+            in McIDAS-X 7.[78]0 when ldm-mcidas decoders have been
+            linked against McIDAS-X 7.80
+            
+I   Introduction
+
+Users of ldm-mcidas decoders who wish to use the ROUTE PostProcess
+BATCH capability of the McIDAS file routing facility must use the Bourne
+shell script, batch.k, that is provided in the unix/760/postp directory
+of the Unidata McIDAS-X 7.80 release.  This document describes how that
+file is used to enable ROUTE PostProcess BATCH file processing.
+
+II  Overview
+
+The ldm-mcidas decoders distributed by Unidata are typically C wrappers
+around standard McIDAS-X code.  Because of this, the various decoders
+(gunrv2, lwfile, lwtmd2, and lwtoa3) can use McIDAS-X routing
+information to determine the names of output files (see the McIDAS
+ROUTE command for more information on setting up a McIDAS routing
+table), and will issue PostProcess BATCH command lines if the routing
+table is configured correctly.
+
+The routing table, ROUTE.SYS, will be used and updated by the decoders
+IF it exists in the directory in which the decoders create their
+output McIDAS data files.
+
+The decoders can also update the McIDAS System Key Table, SYSKEY.TAB,
+IF it also exists in the directory in which they produce their
+output data files AND if ROUTE.SYS is also in that directory.  
+
+NOTE: Both ROUTE.SYS and SYSKEY.TAB must be readable and writable by
+the user running the LDM (this user also runs the ldm-mcidas decoders)!
+
+If the routing table, ROUTE.SYS, is located in the directory in which the
+decoders create their data files and is both readable and writable, then
+the decoders will issue a ROUTE PostProcess BATCH command if one has been
+entered in ROUTE.SYS.  A feature introduced in McIDAS-X 7.10 is the ability
+to run McIDAS-X commands without a McIDAS-X session being active.  In order
+to successfully run ROUTE PP BATCH commands, however, one must setup
+an environment in which the commands can find McIDAS data (e.g. MD, GRID,
+AREA) and auxiliary data (e.g. map databases, enhancements, stretches, etc.)
+files.  The environment needed by the McIDAS-X applications is be provided
+by defining the Unix environment variables MCDATA and MCPATH.
+
+III Files
+
+The following is the file needed to setup an environment in which
+one can have McIDAS ROUTE PostProcess BATCH files execute:
+
+batch.k    - Bourne Shell script that substitutes as the real McIDAS BATCH
+             command of the same name
+
+IV  Installation
+
+The following are the steps needed to be taken to get PostProcess BATCH
+commands to run:
+
+o first, verify that the Bourne Shell script, batch.k, exists in the
+  directory where you installed your ldm-mcidas decoders.  batch.k is
+  included in the src/decode directory of the ldm-mcidas source distribution
+  and in the installation bin directory of the ldm-mcidas binary
+  distribution.
+
+  Make sure that batch.k has execute permission set so that the user
+  running the LDM can execute it!
+
+  NOTE: If the PATH for the user running the LDM includes the McIDAS
+  bin directory (typically /home/mcidas/bin), you must make sure that
+  it comes after the installation bin directory for ldm-mcidas.
+  This is crutial!
+
+o next, edit batch.k and set five macro variables to match your setup:
+
+    MCHOME - full pathname of a the home directory for the user that
+             installed McIDAS-X 7.80 (e.g. /home/mcidas)
+
+    MCDATA - full pathname of a the working directory for the user
+             that installed McIDAS-X 7.80 (e.g. /home/mcidas/workdata)
+
+    MCPATH - a colon separated list of directories that McIDAS will
+             search when looking for auxiliary data, data and help
+             files; the first directory in MCPATH should be the directory
+             defined in MCDATA
+
+    MCLOG  - name of the log file in which textual output from BATCH
+             commands will be saved
+
+    PATH -   a search PATH that contains the both the directory of McIDAS
+             executables and the directory containing the ldm-mcidas
+             decoders.  NOTE: in this PATH the McIDAS bin directory
+             (e.g. /home/mcidas/bin) MUST come BEFORE the directory in
+             which the ldm-mcidas decoders exist.  This is exactly
+             opposite of the order for PATH for the user running the LDM.
+             This is crutial!
+
+    LD_LIBRARY_PATH - the search path for sharable libraries;
+             this should be the same search path as the one
+             used by McIDAS sessions
+
+    NOTE: AIX and HP-UX users need to change LD_LIBRARY_PATH
+          to what is appropriate on their systems
+
+          AIX:  LD_LIBRARY_PATH -> LIBPATH
+          HPUX: LD_LIBRARY_PATH -> SHLIB_PATH
+
+o the user running the LDM and the user that installed McIDAS must be
+  in the same group!  If they are not, then you should modify your system
+  setup so that they are.
+
+o finally, you must insure that the 'mcidas' working directory
+  (e.g. /home/mcidas/workdata) is read/writable by the user running
+  the LDM
+
+
+V  How it all works
+
+o the LDM will receive products in the Unidata-Wisconsin channel
+
+o if you setup your pqact.conf file to do so, ldm-mcidas decoders
+  will convert those products into McIDAS-compatible data files
+
+o if you copied ROUTE.SYS and SYSKEY.TAB to the directory in which
+  you configured your ldm-mcidas decoders to create output data files,
+  AND you configured various products to have ROUTE PostProcess BATCH
+  files run upon receipt of products, then the ldm-mcidas decoders will
+  issue BATCH commands to their environment
+
+o since you made sure that the directory containing the Bourne 
+  Shell script, batch.k, is located "early" the LDM's PATH (before
+  the directory containing McIDAS executables), the script batch.k
+  will be run instead of the "real" McIDAS command, batch.k
+
+o the script, batch.k, then reads and parses the McIDAS command that
+  is supposed to be run, and sets up the envrionment that is needed by
+  the McIDAS-X 7.60 routines for proper execution.  Finally, batch.k
+  runs the "real" McIDAS-X 7.80 BATCH exectuable passing it the
+  environment defined in MCDATA and MCPATH and the various command
+  line options issued by the ldm-mcidas decoders.
+
+VI Who to Turn to for Help
+
+If decide to setup this system for ROUTE PostProcessing in the LDM-McIDAS-X
+environment and run into problems, please send email to Unidata support
+at: support@unidata.ucar.edu
+
+
+Tom Yoksas
+**************************************************************************** <
+Unidata User Support                                    UCAR Unidata Program <
+(303)497-8644                                                  P.O. Box 3000 <
+support@unidata.ucar.edu                                   Boulder, CO 80307 <
+---------------------------------------------------------------------------- <
+Unidata WWW Service                             http://www.unidata.ucar.edu/ <
+**************************************************************************** <

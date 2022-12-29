@@ -1,0 +1,530 @@
+<HTML>
+
+<HEAD>
+<TITLE>LDM-McIDAS Build</TITLE>
+<META NAME="BOOKMARK" CONTENT="LDM-McIDAS Build">
+<META NAME="AUTHOR" CONTENT="Unidata">
+<META NAME="KEYWORDS" CONTENT="">
+<META NAME="DESCRIPTION" CONTENT="">
+</HEAD>
+
+<BODY>
+<H1 ALIGN="center">LDM-McIDAS:<br>Building and Installing</H1>
+
+<HR NOSHADE SIZE="2">
+<P>
+
+<h2>Building and Installing the LDM-McIDAS decoders</h2>
+
+If there is no binary distribution that will work on your machine, you
+will need to build the LDM-McIDAS decoders from source.
+
+<p>
+After you download the source distribution of the LDM-McIDAS
+package, you need to move it to a suitable location, compile,
+test, and install the software.<p>
+
+<h3>Table of Contents</h3>
+<ul>
+   <li><a href=#where>Where to Install the Software</a>
+   <li><a href=#consider>What to do Before Compiling</a>
+   <li><a href=#compile>Compiling the Software</a>
+   <li><a href=#install>Installing the Software</a>
+   <li><a href=#other>Diagnosing Problems and Other Installation Notes</a>
+</ul>
+
+<hr>
+<a name=where>
+<h3>Where to Install the Software</h3>
+</a>
+
+Like all Unidata packages, LDM-McIDAS is distributed as a separate package,
+and you can build and install it any place
+you like on the machine that is running the <b>LDM</b> so long as the
+user running the <b>LDM</b> has access to and execute privilege for its
+decoders.
+
+<p>
+Here are some guidelines for LDM-McIDAS:<p>
+
+<ul>
+   <li>we recommend that you build/install in the same account that you use
+       for the LDM package (e.g., <b>ldm</b>).<p>
+
+   <li>if you decide to not build/install LDM-McIDAS in the <b>ldm</b>
+       account, we recommend that you install it at the same level as the LDM
+       (e.g., /usr/local/ldm-mcidas if the LDM is installed in
+       /usr/local/ldm).
+</ul>
+
+<p>
+If you follow these guidelines, your directory structure would look
+something like:
+
+<p>
+LDM-McIDAS built/installed in <b>ldm</b> account:
+
+<font face="fixed">
+<pre>
+                        |-bin        
+                        |-data-------
+                        |-doc        
+                        |-etc--------
+                        |-include    
+                        |-decoders
+           |            |-util
+           |            |
+           |            |            |-bin-----
+           |            |            |-doc-----
+           |            |-ldm-5.2.x--|-include-
+           |            |            |-lib-----
+           |            |            |-man-----|-man1-
+           |            |            |         |-man3-
+           |-ldm--------|            |-src-----
+           |            |
+           |            |-lib        
+           |            |-logs       
+           |            |-man        
+           |            |-runtime    
+           |            |-src
+           |            |
+           |            |                  
+           |            |                             |-bin-----
+           |            |            |                |-lib-----
+/usr/local-|            |-ldm-mcidas-|-ldm-mcidas-...-|
+           |            |            |                |         |-decode--
+           |            |                             |-src-----|-ingest--
+           |            |                             |         |-libpng-
+           |            |                             |         |-port----
+           |            |                             |         |-tingest-
+           |            |                             |         |-zlib----
+           |            |                                       |
+           |            |                                       |-include-
+           |            |                                       |-man-----|-man1
+           |            |                       
+           |            |                       
+           |-bin
+</pre>
+</font>
+
+<p>
+LDM-McIDAS built/installed at the same level as the <b>ldm</b> account:
+
+
+<font face="fixed">
+<pre>
+                        |-bin        
+                        |-data-------
+                        |-doc        
+                        |-etc--------
+                        |-include    
+                        |-decoders
+                        |-util
+                        |
+                        |            |-bin-----
+                        |            |-doc-----
+                        |-ldm-5.2.x--|-include-
+                        |            |-lib-----
+                        |            |-man-----|-man1-
+                        |            |         |-man3-
+           |-ldm--------|            |-src-----
+           |            |
+           |            |-lib        
+           |            |-logs       
+           |            |-man        
+           |            |-runtime    
+           |            |-src
+           |
+           |                   
+           |                             |-bin-----
+           |                             |-lib-----
+/usr/local-|            |                |
+           |-ldm-mcidas-|-ldm-mcidas-...-|
+           |            |                |         |-decode--
+           |                             |-src-----|-ingest--
+           |                             |         |-libpng-
+           |                             |         |-port----
+           |                             |         |-tingest-
+           |                             |         |-zlib----
+           |                             |
+           |                             |-include-
+           |                             |-man-----|-man1
+           |                     
+           |                     
+           |-bin
+</pre>
+</font>
+
+<p>
+To build the source distribution or unpack the binary distribution in the
+<b>ldm</b> account, you would move the compressed tar
+file to the <b>/usr/local/ldm/ldm-mcidas</b> directory and uncompress and
+untar the file:
+
+<pre>
+   &lt;login as the user <b>ldm</b>&gt;
+
+   <nobr>Type: <b>mkdir ldm-mcidas</b></nobr>
+   <nobr>Type: <b>cd ldm-mcidas</b></nobr>
+   <nobr>Type: <b>mv </b>&lt;<em>ldm-mcidas_download_directory</em>&gt;<b>/ldm-mcidas-2004.tar.Z .</b></nobr>
+   <nobr>Type: <b>zcat ldm-mcidas-2004.tar.Z | tar xvf -</b></nobr>
+</pre>
+
+<p>
+If you are working with a binary distribution, you can proceed to the
+<a href=#install>Installing the Software</a> section.
+
+<p>
+<hr>
+<a name=consider>
+<h3>What to do Before Compiling</h3>
+</a>
+
+<ol>
+
+<li><h3>Defining Environment Variables</h3>
+
+LDM-McIDAS uses the <b><em>configure</em></b> utility to create C
+header and compilation Makefile files.  The packages that LDM-McIDAS
+decoders depend on are:
+
+<p>
+<ul>
+   <li>Unidata LDM<br>
+   <li>Unidata McIDAS-X<br>
+   <li>Unidata netCDF (bundled wth McIDAS-X)
+   <li>zlib (bundled with LDM-McIDAS)
+   <li>libpng (bundled with LDM-McIDAS)
+</ul>
+
+<p>
+If both the <b>LDM</b> or <b>McIDAS-X</b> are installed in
+&quot;standard&quot; directories,
+<b><em>configure</em></b> will correctly guess values for
+needed, system-dependent environment variables.  If those packages are not
+installed in &quot;standard&quot; directories, you will need to define
+environment variables that will tell <b><em>configure</em></b> where to
+find the packages.
+
+<p>
+The easiest way to insure that <b><em>configure</em></b> will find all
+of the packages it needs is to define needed environment variables
+yourself.  The full set of environment variables you may need to define
+to build LDM-MCIDAS are:
+
+<!--
+You should read the McIDAS-X
+<a href="http://www.unidata.ucar.edu/software/mcidas/2004/mcx/backup/warnings_mcx.html#netcdf">Notes and Warnings</a>
+section on setting environment variables needed for
+building the <b>netCDF</b> package bundled with McIDAS-X.  You will
+need to define the same environment variables to build LDM-McIDAS as for the
+<b>netCDF</b>.
+
+<p>
+In addition to the environment variables listed in
+<a href="http://www.unidata.ucar.edu/software/mcidas/2004/mcx/backup/warnings_mcx.html#netcdf">Notes and Warnings</a>,
+you should also define the following:
+-->
+
+<p>
+<table border=1>
+
+<tr>
+<td>Environment variable</td>
+<td>Use</td>
+</tr>
+
+<tr>
+<td>CC</td>
+<td>C compiler to use</td>
+</tr>
+
+<tr>
+<td>CFLAGS</td>
+<td>C compiler flags to use</td>
+</tr>
+
+<tr>
+<td>CPPFLAGS</td>
+<td>C preprocessor flags to use</td>
+</tr>
+
+<tr>
+<td>FC</td>
+<td>Fortran compiler to use</td>
+</tr>
+
+<tr>
+<td>FFLAGS</td>
+<td>Fortran compiler flags to use</td>
+</tr>
+
+<tr>
+<td>CPP_LDM</td>
+<td>Compile-time reference for LDM header files</td>
+</tr>
+
+<tr>
+<td>LD_LDM</td>
+<td>Link-time reference for LDM library</td>
+</tr>
+
+<tr>
+<td>CPP_MCIDAS</td>
+<td>Compile-time reference for McIDAS header files</td>
+</tr>
+
+<tr>
+<td>LD_MCIDAS</td>
+<td>Link-time reference for McIDAS library</td>
+</tr>
+
+<tr>
+<td>CPP_NETCDF</td>
+<td>Compile-time reference for netCDF header files</td>
+</tr>
+
+<tr>
+<td>LD_NETCDF</td>
+<td>Link-time reference for netCDF library</td>
+</tr>
+
+<tr>
+<td>LD_X11</td>
+<td>Link-time reference for X11 library</td>
+</tr>
+
+<tr>
+<td>LD_MATH</td>
+<td>Link-time reference for math library</td>
+</tr>
+
+</table>
+
+<p>
+Example environment variable settings for a Linux system:
+
+<pre>
+CC=gcc
+CFLAGS=-O
+CPPFLAGS='-DNDEBUG -Df2cFortran'
+FC=g77
+FFLAGS='-O -Wuninitialized -fno-automatic -ff90-intrinsics-hide'
+CPP_LDM=-I/home/ldm/include
+LD_LDM='-L/home/ldm/lib -lldm'
+CPP_MCIDAS=-I/home/mcidas/inc
+LD_MCIDAS='-L/home/mcidas/lib -lmcidas'
+CPP_NETCDF=-I/home/mcidas/include
+LD_NETCDF='-L/home/mcidas/lib -lnetcdf'
+LD_X11=-L/usr/X11R6/lib -lX11
+LD_MATH=-lm
+</pre>
+
+<!--
+<pre>
+   Type: <b>setenv CPP_MCIDAS '-I/home/mcidas/inc</b>'
+   Type: <b>setenv LD_MCIDAS  '-L/home/mcidas/lib -lmcidas'</b>
+   Type: <b>setenv CPP_NETCDF '-I/home/mcidas/mcidas2006/netcdf/libsrc'</b>
+   Type: <b>setenv LD_NETCDF  '-L/home/mcidas/mcidas2006/netcdf/libsrc -lnetcdf'</b>
+</pre>
+-->
+
+<p>
+After defining the environment variables, you should go into the <em>src</em>
+directory of the LDM-McIDAS version you just unpacked:
+
+<pre>
+   Type: <b>cd ~ldm/ldm-mcidas/ldm-mcidas-200<em>x</em>/src</b>
+</pre>
+
+<p>
+and read the <b>README</b> and <b>INSTALL</b> files before proceeding.
+<b>INSTALL</b> provides additional information on running the configuration
+utility.
+
+<p>
+<li><h3>Running <em>configure</em></h3>
+
+<p>
+The next step is to run the <b><em>configure</em></b> shell script
+located in the <em>src</em> directory of the LDM-McIDAS version tree:
+
+<pre>
+   Type: <b>./confgure</b>
+</pre>
+
+</ol>
+
+<p>
+<hr>
+<a name=compile>
+<h3>Compiling the Software</h3>
+</a>
+
+Once <b><em>configure</em></b> has run, and assuming it ran with no errors,
+you use <b>make</b> to compile, test and install the LDM-McIDAS package.
+
+<p>
+There are 3 steps in the <b>make</b> process:
+
+<p>
+<ol>
+   <li><b>creation of libraries and executables</b> - where the source code is
+       compiled and the libraries are created
+   <li><b>installation</b> - where the binaries and libraries are moved to 
+       the directories you specified when you ran <em>configure</em>
+   <li><b>cleaning up</b> - where the object files are deleted
+</ol>
+
+To build, install, and then cleanup, you can type:
+
+<p>
+For `csh'-compatible shells:
+
+<pre>
+    Type: <b>make all install clean >&! ldm-mcidas.log &</b>
+    Type: <b>tail -f ldm-mcidas.log</b>
+</pre>
+
+<p>
+For POSIX.2-compatible shells (e.g `sh', `ksh', `bash:
+
+<pre>
+    Type: <b>make all install clean >ldm-mcidas.log 2>&1 &</b>
+    Type: <b>tail -f ldm-mcidas.log</b>
+</pre>
+
+<p>
+Following these examples, output from the make command will be sent to the file
+<b><em>ldm-mcidas.log</em></b>.  The tail command allows you to view
+the output as it is sent to the log file.  We recommend that you send
+the output to a log file.  If there are problems, and you can't figure
+out what is wrong, you can mail the log file to
+<A HREF="mailto:support-ldm-mcidas@unidata.ucar.edu">&lt;support-ldm-mcidas AT unidata.ucar.edu&gt;</A>.
+
+<p>
+<hr>
+<a name=install>
+<h3>Installing the Software</h3>
+</a>
+
+<p>
+At this point, you could use the LDM-McIDAS decoders from the directory
+you just installed them in:
+<b>~ldm/ldm-mcidas/ldm-mcidas-200x/bin</b>.  We recommend, however, that you copy
+them to the either the <b>~ldm/decoders</b> or <b>~ldm/util</b> directory and
+use them from there.  Which directory you copy them to will depend on which
+directory you have previously created and included in the <b>PATH</b> for the
+user running your LDM.
+
+<p>
+Since the most commonly used directory for LDM decoders is
+<b>~ldm/decoders</b>, we recommend that copy them there:
+
+<pre>
+   &lt;while still logged in as 'ldm'&gt;
+   Type: <b>cd ~ldm/ldm-mcidas/ldm-mcidas-200<em>x</em>/bin</b>
+   Type: <b>chmod +x *</b>
+   Type: <b>cp area2png ~ldm/decoders</b>
+   Type: <b>cp nldn2md ~ldm/decoders</b>
+   Type: <b>cp pnga2area ~ldm/decoders</b>
+   Type: <b>cp pngg2gini ~ldm/decoders</b>
+   Type: <b>cp proftomd ~ldm/decoders</b>
+   Type: <b>cp zlibg2gini ~ldm/decoders</b>
+</pre>
+
+<p>
+If this is a first-time installation for the LDM-McIDAS decoders on your
+system, also do the following (do not do this if you are upgrading):
+
+<pre>
+   Type: <b>cp batch.k ~ldm/decoders</b>
+   Type: <b>cp uwgrid.sh ~ldm/decoders</b>
+</pre>
+
+<p>
+Next, if you will be using <b>pnga2area</b> to decode <b>MCIDAS</b> and
+<b>FNEXRAD</b> datastream imagery into McIDAS usable formats, you will
+need to copy two files in the LDM-McIDAS <b>etc</b> to the
+<b>~ldm/etc</b> directory:
+
+<pre>
+   &lt;while still logged in as 'ldm'&gt;
+   Type: <b>cd ~ldm/ldm-mcidas/ldm-mcidas-200<em>x</em>/etc</b>
+   Type: <b>cp SATANNOT ~ldm/etc</b>
+   Type: <b>cp SATBAND ~ldm/etc</b>
+</pre>
+
+<p>
+If you will be decoding <b>FSL2</b> Wind Profiler and <b>NLDN</b> lightning
+data into McIDAS compatible data files, you must copy three files
+in the LDM-McIDAS <b>etc</b> to the to the directory where you want
+decoders for these data to write their output:
+
+<pre>
+   &lt;still logged in as 'ldm'&gt;
+   Type: <b>cd ~ldm/ldm-mcidas/ldm-mcidas-200<em>x</em>/etc</b>
+   Type: <b>chmod 664 ROUTE.SYS SYSKEY.TAB</b>
+   Type: <b>chmod 666 SCHEMA</b>
+   Type: <b>cp ROUTE.SYS ~ldm/data/mcidas</b>
+   Type: <b>cp SYSKEY.TAB ~ldm/data/mcidas</b>
+   Type: <b>cp SCHEMA ~ldm/data/mcidas</b>
+</pre>
+
+<p>
+<hr>
+<a name=other>
+<h3>Diagnosing problems and other considerations</h3>
+</a>
+
+If an error occurs during the <b><i>configure</i></b> or <b>make</b>
+process, you can try to diagnose the problem by looking at the file
+<b>config.status</b> or by looking at the <b>make</b> log file.<p>
+
+If you are unable to figure out what is wrong, send a message to
+<A HREF="mailto:support-ldm-mcidas@unidata.ucar.edu">&lt;support-ldm-mcidas AT unidata.ucar.edu&gt;</A>.<br>
+and include (if possible) the error message (ex: the output from the log
+file).  A few of the common problems that occur and a brief description are
+listed below.  A more complete listing of common problems (and solutions) can
+be found
+by searching the
+<a href=ldm-mcidas-faq.html#mail>LDM-McIDAS email archive</a>.<p>
+
+<ul>
+   <li><b>When doing a <i>make</i>, make bombs when it tries to
+       compile the decoders</b>- You probably have not installed the McIDAS-X,
+       LDM, or netCDF libraries or include files or the path to any of them
+       is incorrect.<p>
+
+   <li><b>You get the error <i>Cannot load command</i> followed by a
+       reference to a GEMPAK directory</b> - The <b>AR</b> environment variable
+       is set as a reference to the location of the GEMPAK AREA files.
+       Set this variable to nothing (<b>setenv AR</b>) and rerun configure.
+</ul>
+
+<B>REMEMBER:</b> You need to have the <a href=/software/ldm/index.html>LDM</a>,
+<a href=/software/netcdf/index.html>netCDF</a>, and McIDAS-X libraries
+and include files installed on your system before you can build the
+LDM-McIDAS decoders.<p>
+
+<HR>
+
+<P>
+<DIV>
+<CENTER>
+[<A HREF="ldm-mcidas-download.html">Go to Previous</A>] [<A HREF="ldm-mcidas-use.html">Go to Next</A>]
+</CENTER>
+</DIV>
+
+<p>
+<HR>
+
+<p>
+<ADDRESS>
+Send questions/comments to <A HREF="mailto:support-ldm-mcidas@unidata.ucar.edu">&lt;support-ldm-mcidas
+AT unidata.ucar.edu&gt;</A>.
+</ADDRESS>
+<script src="/js/ldm-mcidas_add_in.js" type="text/javascript"></script>
+
+</BODY>
+</HTML>

@@ -1,0 +1,274 @@
+                        TO INSTALL THIS PACKAGE
+
+1.  Go to the top-level, source directory of this package (i.e. the
+    directory that contains this file).
+
+2.  Execute the command "make distclean".  Don't worry if it fails to
+    execute because it can't find a makefile.
+
+3.  Remove the file "config.cache" if it exists.
+
+4.  Set environment variables to customize the build process.  The 
+    TESTED SYSTEMS section below contains examples of environment
+    variable settings that resulted in successful builds.  USE IT.
+
+    (For the following variables, any value given in the environment
+    overrides the value that `configure' would choose:)
+
+        CC          C compiler program.  Default is platform-dependent.
+                    You should use a Standard C compiler; otherwise,
+                    you might not be able to build this package.  Note:
+                    I couldn't get gcc(1) to work under SunOS 4 (the
+                    problem was linking).
+        CFLAGS      C compiler options.  Default is `-O'.
+        FC          Fortran compiler.  Default is platform-dependent.
+        FFLAGS      Fortran compiler options.  Default is `-O'.
+        LDFLAGS     Linker (ld) options.  Default is nothing.
+        CPP_LDM     Compile-time reference for Unidata LDM header files, e.g.
+                    `-I/usr/local/ldm/include'.
+        LD_LDM      Link-time reference for Unidata LDM library, e.g.
+                    `-L/usr/local/ldm/lib -lldm'.
+        CPP_MCIDAS  Compile-time reference for McIDAS header files, e.g.
+                    `-I/home/mcidas/src'.
+        LD_MCIDAS   Link-time reference for McIDAS library, e.g.
+                    `-L/home/mcidas/lib -lmcidas'.
+        LD_FORTRAN  Link-time reference for any additional libraries 
+                    necessary for building a Fortran program.  Default
+                    is nothing.
+
+    (For the following variables, any value given in the environment is
+    added to the value that `configure' chooses:)
+
+        CPPFLAGS    C preprocessor options.  Default is nothing, implying
+                    assert()-checking is enabled.
+        LIBS        Libraries to link with, in the form `-L/foo/bar -lbof ...'
+
+5.  Decide where you want to install the package.  By default, the
+    package's files will be installed in ../bin, ../lib, ../man,
+    etc. (relative to the directory containing this file).  You can
+    specify an installation prefix other than `../' by giving the
+    `configure' script in the next step the option `--prefix=<path>',
+    where <path> is the pathname of the installation-point (e.g.
+    `--prefix=/usr/local').
+
+    You can specify separate installation prefixes for architecture-
+    specific files and architecture-independent files.  If you give the
+    `configure' script the option `--exec_prefix=<path>', the package
+    will use <path> as the prefix for installing programs and libraries.
+    Data files and documentation will still use the regular prefix.
+    Normally, all files are installed using the regular prefix.
+
+6.  Execute the command "./configure" -- possibly with the installation
+    path options from the previous step.  Redirect its standard output
+    and standard error to the file "configure.log".
+
+    This will configure the makefiles for the build process.
+
+    If this step fails -- which is indicated by error messages (not
+    warnings) in "configure.log" -- then stop and send items A through E
+    below to <support@unidata.ucar.edu>.
+
+7.  Execute the command "make".  Redirect its standard output and
+    standard error to the file "make.log".  If this step fails, then
+    stop and send items A through F below to <support@unidata.ucar.edu>.
+
+8.  Execute the command "make test".  Redirect its standard output and
+    standard error to the file "test.log".  If this step fails, then
+    stop and send items A through G below to <support@unidata.ucar.edu>.
+
+9.  Execute the command "make install".  Redirect its standard
+    output and standard error to the file "install.log".  If this
+    step fails, then stop and send items A through H below to
+    <support@unidata.ucar.edu>.
+
+10. Execute the command "make clean".  This will clean up the source
+    directory-tree by removing most temporary files.  It will, however,
+    leave the makefiles, the ".log" files from the previous steps, the
+    file "config.cache" (which MUST be removed in order to build on a
+    different system) and the executable script "config.status" (which
+    was created by the configure script and creates the makefiles).  If
+    you don't wan't any of these files, then execute the command "make
+    distclean" instead.
+
+
+The following items help us diagnose installation problems:
+
+    A.  The standard output of the command "uname -a".
+
+    B.  The contents of the file VERSION, which is in the top-level
+        source directory.
+
+    C.  The absolute pathnames of all compilers (C, Fortran, C++) used
+        in the build process (use the type(1) or which(1) utility to
+        determine this).
+
+    D.  The file "configure.log" from step 6 above.
+
+    E.  The file "config.log", which is created in the top-level source
+        directory by the configure script during step 6 above.
+
+    F.  The file "make.log" from step 7 above.
+
+    G.  The file "test.log" from step 8 above.
+
+    H.  The file "install.log" from step 9 above.
+
+************************************************************************
+TESTED SYSTEMS:
+
+This package has been built on the following systems using the indicated 
+environment variable settings:
+
+    AIX gale 3 4 001330614C00
+        CPPFLAGS='-Dextname -D_XOPEN_SOURCE_EXTENDED'           # necessary
+        CC=/bin/c89
+        CFLAGS=-O
+        FC=/usr/bin/f77
+        FFLAGS='-qextname -O'
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+
+    HP-UX robin A.09.05 A 9000/715 2010262449 two-user license:
+        We no longer have this system.  The following worked for a
+        previous release, however:
+
+        CPPFLAGS=
+        CC=/bin/c89
+        CFLAGS=-O
+        FC=/usr/bin/fort77
+        FFLAGS=-O
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+
+    HP-UX robin B.10.20 E 9000/715 2010262449 8-user license
+        We no longer have this system.  The following worked for a
+        previous release, however:
+
+        CPPFLAGS='-D_HPUX_SOURCE -Dextname'         # necessary
+        CC=/bin/c89
+        CFLAGS=-O
+        FC=/opt/fortran/bin/fort77      # might be /usr/bin/fort77 instead
+        FFLAGS='-O3 +ppu'               # "+ppu" is necessary
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+
+    HP-UX robin B.11.00 E 9000/715 2010262449 8-user license
+        CPPFLAGS='-D_HPUX_SOURCE -Dextname -w'                  # necessary
+        CC=/bin/c89
+        CFLAGS=-O
+        FC=/opt/fortran/bin/fort77      # might be /usr/bin/fort77 instead
+        FFLAGS='-O3 +ppu'               # "+ppu" is necessary
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+
+    IRIX chevy 6.5 04191225 IP22
+        CPPFLAGS=
+        CC=/bin/cc
+        CFLAGS='-n32 -O -Wl,-woff,84 -Wl,-woff,85'   # disable warnings 84 & 85
+        FC=/bin/f77
+        FFLAGS='-n32 -O -Wl,-woff,84 -Wl,-woff,85'   # disable warnings 84 & 85
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+        CPP_NETCDF=-I/home/mcidas/mcidas7.6/netcdf/libsrc       # site specific
+        LD_NETCDF='-L/home/mcidas/mcidas7.6/netcdf/libsrc -lnetcdf' # use of
+                                             # netcdf bundled with McIDAS-X 7.6
+
+    IRIX64 flip 6.5 01200532 IP30
+        CPPFLAGS=
+        CC=/bin/cc
+        CFLAGS='-n32 -O -Wl,-woff,84 -Wl,-woff,85'   # disable warnings 84 & 85
+        FC=/bin/f77
+        FFLAGS='-n32 -O -Wl,-woff,84 -Wl,-woff,85'   # disable warnings 84 & 85
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+        CPP_NETCDF=-I/home/mcidas/mcidas7.6/netcdf/libsrc       # site specific
+        LD_NETCDF='-L/home/mcidas/mcidas7.6/netcdf/libsrc -lnetcdf' # use of
+                                             # netcdf bundled with McIDAS-X 7.6
+
+    RedHat 5.2 Linux with 2.2 Linux kernel
+    Linux chico 2.2.13 #1 SMP Wed Oct 27 20:36:20 MDT 1999 i686 unknown
+        We no longer have this system.  The following worked for a
+        previous release, however:
+
+        CPPFLAGS=-Df2cFortran       # "-Df2cFortran" is necessary if the
+                                    # Fortran "compiler" is fort77(1).
+        CC=/usr/bin/cc
+        CFLAGS=-O
+        FC=fort77
+        FFLAGS=-O
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+        LD_FORTRAN='-static -lf2c'      # necessary if FC is "fort77"; 
+                                        # otherwise, MAIN__ won't be found
+
+    RedHat 6.1 Linux with 2.2 Linux kernel
+    Linux sunshine 2.2.14 #6 SMP Mon Mar 27 18:42:31 MST 2000 i686 unknown
+        CPPFLAGS=-Df2cFortran       # "-Df2cFortran" is necessary if the
+                                    # Fortran "compiler" is fort77(1).
+        CC=/usr/bin/cc
+        CFLAGS=-O
+        FC=fort77
+        FFLAGS=-O
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+        LD_FORTRAN='-static -lf2c'      # necessary if FC is "fort77"; 
+                                        # otherwise, MAIN__ won't be found
+
+    OSF1 ernie.unidata.ucar.edu V4.0 1091 alpha
+        CPPFLAGS=
+        CC=/bin/cc
+        CFLAGS=-O
+        FC=/bin/f77
+        FFLAGS=-O
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+        LD_MATH=-lm
+
+    SunOS laraine 5.6 Generic_105181-20 sun4u sparc SUNW,Ultra-2
+        CPPFLAGS=
+        CC=/opt/SUNWspro/bin/cc
+        CFLAGS=-O
+        FC=/opt/SUNWspro/bin/f77
+        FFLAGS=-O
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+        LD_FORTRAN=-Bstatic -lF77 -lM77 -lsunmath -Bdynamic
+
+    SunOS buddy 5.7 Generic_106541-10 sun4u sparc SUNW,Ultra-2
+        CPPFLAGS=
+        CC=/opt/SUNWspro/bin/cc
+        CFLAGS=-O
+        FC=/opt/SUNWspro/bin/f77
+        FFLAGS=-O
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+        LD_FORTRAN=-Bstatic -lF77 -lM77 -lsunmath -Bdynamic
+
+    SunOS sinbad 5.7 Generic_106542-11 i86pc i386 i86pc
+        CPPFLAGS=
+        CC=/opt/SUNWspro/bin/cc
+        CFLAGS=-O
+        FC=/opt/SUNWspro/bin/f77
+        FFLAGS=-O
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+
+    SunOS lenny 5.8 Generic i86pc i386 i86pc
+        CPPFLAGS=
+        CC=/opt/SUNWspro/bin/cc
+        CFLAGS=-O
+        FC=/opt/SUNWspro/bin/f77
+        FFLAGS=-O
+        CPP_MCIDAS=-I/home/mcidas/mcidas7.6/src                 # site specific
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'                 # site specific
+
+    Items for CVS make of ldm-mcidas -- gcc/f2c/mcfc >= McIDAS-X 7.6 --
+    SunOS sinbad 5.7 Generic_106542-11 i86pc i386 i86pc
+        CC=gcc
+        CFLAGS=-O
+        FC=/home/mcidas/bin/mcfc
+        FFLAGS=-O
+        LDFLAGS=-s
+        CPP_MCIDAS='-I/home/mcidas/mcidas7.6/src'
+        LD_MCIDAS='-L/home/mcidas/lib -lmcidas'
+        LD_FORTRAN='-lf2c'

@@ -1,0 +1,75 @@
+$Id: README,v 1.11 2000/05/11 19:22:42 yoksas Exp $
+
+
+INTRODUCTION:
+
+This package contains LDM decoders for generating McIDAS products from
+the McIDAS, NIDS, and NLDN data streams.
+
+
+
+PACKAGE COMPONENTS:
+
+    Directory		Contents
+    ---------		--------
+
+    decode/		Sources for LDM decoders for McIDAS data:
+			cdftomd(1), lwtoa3(1), gunrv2(1), lwfile(1), lwtmd2(1), 
+			nldn2md(1), nids2area(1), and proftomd(1).
+
+    port		Portability stuff and miscellaneous support
+			functions.
+
+    libpng		PNG compression library stuff.neous support
+
+    zlib		zlib compression library stuff.neous support
+
+
+************************************************************************
+INSTALLATION:
+
+Please read the file INSTALL and follow its instructions.
+
+************************************************************************
+USAGE:
+
+Manual pages for each utility should become available when the package
+is installed.  You might, however, have to adjust your MANPATH environment
+variable in order to access them: e.g.
+
+    % make install
+    ...
+    % setenv MANPATH $MANPATH:/usr/local/ldm-mcidas/man
+    % man 1 pnga2area
+    ...
+    % man 1 lwtoa3
+    ...
+
+Also, if you intend to use the decode utilities as LDM decoders, then you
+should be familiar with the chapter on LDM configuration in the LDM Site
+Manager's Guide.
+
+************************************************************************
+NOTES:
+
+The decoder proftomd(1) replaced cdftomd(1).  In a future distribution
+of the ldm-mcidas package, cdftomd will be deleted.
+
+area2png(1) is used to compress McIDAS AREA files.  The AREA file headers
+(directory, navigation, calibration, aux) and audit block (located after
+the image portion of the file) are stored uncompressed at the beginning
+of the PNG compressed file.  This way, the directory information can be
+read, and utilities that can display PNG compressed images can display
+be used to display the compressed AREA file image (after skipping the
+header information).
+
+pnga2area(1) is used to put area2png(1) compressed AREA file imagery
+back into AREA file format.
+
+************************************************************************
+FEEDBACK:
+
+Please send questions, bug reports, complaints, praise, criticisms, etc. to
+the following address at the Unidata Program Center:
+
+	support@unidata.ucar.edu
