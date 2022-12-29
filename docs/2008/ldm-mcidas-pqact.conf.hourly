@@ -1,0 +1,284 @@
+#########################################################################
+#
+# MCIDAS (Unidata-Wisconsin datastream) section
+#
+#########################################################################
+
+#
+#### PNG compressed Unidata-Wisconsin channel image (AREA) files
+#
+
+#
+# Unidata-Wisconsin PNG compressed Products header information:
+#
+#              \1  \2   \3          \4      \5    \6     \7
+#           Qx pd anum SAT         BAND    RES CCYYMMDD HHMM
+# pnga2area Q0 CF 0015 GOES-10_SND UNKBAND 1km 20000525 2000
+
+
+# NOTE: In the following actions for running pnga2area, it has been
+# assumed that you have copied SATANNOT and SATBAND from the etc
+# directory of the ldm-mcidas distribution to the ~ldm/etc directory.
+
+# Example of decoding UW datastream imagery (GOES and CIMSS products) using
+# McIDAS-X routing table for product naming and possible execution of ROUTE
+# PostProcess BATCH files.
+
+MCIDAS	^pnga2area Q. (..) (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl /usr/local/ldm/logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	-d data/mcidas -r \1,\2
+
+# Examples for decoding UW datastream imagery (GOES and CIMSS products)
+# into a hierarchical directory structure usable by GEMPAK/GARP/NMAP and
+# McIDAS-X Version 7.7 or higher
+
+# Vis (0.65 um)
+MCIDAS	^pnga2area Q1 (U[^ACXY13]) (.*) (.*)_IMG (0.65)um (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/\3/\5/VIS/VIS_\6_\7
+
+# Short IR (3.9 um)
+MCIDAS	^pnga2area Q1 (U[^ACXY13]) (.*) (.*)_IMG (3.9)um (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/\3/\5/\4/\4_\6_\7
+
+# WV (6.[58] um)
+MCIDAS	^pnga2area Q1 (U[^ACXY13]) (.*) (.*)_IMG (6..)um (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/\3/\5/WV/WV_\6_\7
+
+# IR (10.7 um)
+MCIDAS	^pnga2area Q1 (U[^ACXY13]) (.*) (.*)_IMG (10.7)um (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/\3/\5/IR/IR_\6_\7
+
+# Long IR (GOES-East: 13.3 um; GOES-West: 12.0 um)
+MCIDAS	^pnga2area Q1 (U[8E]) (.*) (.*)_IMG (.*)um (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/\3/\5/\4/\4_\6_\7
+
+# Manually digitized radar
+MCIDAS	^pnga2area Q1 (U3) (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl /usr/local/ldm/logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/MDR/\5/MDR/MDR_\6_\7
+
+# Educational floater 1 (typically GOES-East sector/band)
+MCIDAS	^pnga2area Q1 (UA) (.*) (.*)_IMG (.*)um (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/\3_fl1/\5/\4/\4_\6_\7
+
+# Educational floater 2 (typically GOES-West sector/band)
+MCIDAS	^pnga2area Q1 (UC) (.*) (.*)_IMG (.*)um (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/\3_fl2/\5/\4/\4_\6_\7
+
+# UW Antarctic IR composite
+MCIDAS	^pnga2area Q1 (U1) (.*) (.*)_IMG (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/ANTARCTIC/\5/IR/IR_\6_\7
+
+# UW Mollweide composite (IR & WV)
+MCIDAS	^pnga2area Q1 (UX) (.*) (.*)_IMG (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/MOLLWEIDE/24km/IR/IR_\6_\7
+
+MCIDAS	^pnga2area Q1 (UY) (.*) (.*)_IMG (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/MOLLWEIDE/24km/WV/WV_\6_\7
+
+# Manually Digitized Radar
+MCIDAS	^pnga2area Q1 (U3) (.*) GRAPHICS (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/MDR/\4/MDR/MDR_\5_\6
+
+#
+# SSEC/CIMSS GOES products
+#
+
+# CIMSS Cloud Top Pressure - McIDAS product code CA
+MCIDAS	^pnga2area Q0 CA (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/SOUNDER/\3/CTP/CTP_\5_\6
+
+# CIMSS Total Column Precipitable Water - McIDAS product code CB
+MCIDAS	^pnga2area Q0 CB (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/SOUNDER/\3/PW/PW_\5_\6
+
+# CIMSS Sea Surface Temperature - McIDAS product code CC
+MCIDAS	^pnga2area Q0 CC (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/SOUNDER/\3/SST/SST_\5_\6
+
+# CIMSS Lifted Index - McIDAS product code CD
+MCIDAS	^pnga2area Q0 CD (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/SOUNDER/\3/LI/LI_\5_\6
+
+# CIMSS CAPE - McIDAS product code CE
+MCIDAS	^pnga2area Q0 CE (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/SOUNDER/\3/CAPE/CAPE_\5_\6
+
+# CIMSS Ozone - McIDAS product code CF
+MCIDAS	^pnga2area Q0 CF (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/SOUNDER/\3/OZONE/OZONE_\5_\6
+
+# CIMSS Northern Hemisphere Wildfire ABBA - McIDAS product code CG
+MCIDAS	^pnga2area Q0 CG (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/SOUNDER/\3/FIRESNH/FIRESNH_\5_\6
+
+# CIMSS Southern Hemisphere Wildfire ABBA - McIDAS product code CH
+MCIDAS	^pnga2area Q0 CH (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/images/sat/SOUNDER/\3/FIRESSH/FIRESSH_\5_\6
+
+
+#########################################################################
+#
+# FNEXRAD section
+#
+#########################################################################
+
+#
+#### PNG compressed FNEXRAD image (AREA) files
+#
+
+# NEXRCOMP 6 km National BREF mosaic
+FNEXRAD	^pnga2area Q5 (RL) (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/nexrad/NEXRCOMP/6KN0R-NAT/\4_\6_\7
+
+# NEXRCOMP 10 km National RCM mosaic
+FNEXRAD	^pnga2area Q5 (RN) (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/nexrad/NEXRCOMP/10KRCM-NAT/\4_\6_\7
+
+# NEXRCOMP 1 km Regional BREF mosaic
+FNEXRAD	^pnga2area Q5 (RO) (.*) (.*) (.*) (.*) (........) (....)
+	PIPE	-close
+	pnga2area -vl logs/ldm-mcidas.log
+	-a etc/SATANNOT
+	-b etc/SATBAND
+	data/gempak/nexrad/NEXRCOMP/1KN0R-FLT/\4_\6_\7
+
+#
+#### PNG compressed FNEXRAD image (GINI) files
+#
+
+# NEXRAD Level III radar composites in PNG-compressed GINI format
+FNEXRAD	^rad/NEXRCOMP/(...)/(...)_(........)_(....)
+	PIPE	-close
+	pngg2gini -vl logs/ldm-mcidas.log
+	data/gempak/nport/RADAR/\1/\2/\2_\3_\4
+
+
+#########################################################################
+#
+# NLDN section
+#
+#########################################################################
+
+#
+####                      NLDN lightning product
+#
+
+NLDN	^([12][0-9][0-9][0-9]|[0-9][0-9])([0-3][0-9][0-9])([0-2][0-9])([0-5][0-9])([0-5][0-9])
+	PIPE	-close 
+	nldn2md -vl logs/ldm-mcidas.log
+	-d data/mcidas 70 NLDN DIALPROD=LD \1\2 \3\400 DEV=CCN
+
+
+#########################################################################
+#
+# FSL2 section
+#
+#########################################################################
+
+#
+#### IDD FSL2 FSL Wind Profiler netCDF file to MD action
+#
+
+# Hourly summary
+FSL2	^FSL\.NetCDF\.NOAAnet\.windprofiler\.01hr
+	PIPE	-close
+	proftomd -vl logs/ldm-mcidas.log
+	-d data/mcidas U2 WPRO 81
+
+# 6-minute
+FSL2	^FSL\.NetCDF\.NOAAnet\.windprofiler\.06min
+	PIPE	-close
+	proftomd -vl logs/ldm-mcidas.log
+	-d data/mcidas U6 WPR6 91
+
