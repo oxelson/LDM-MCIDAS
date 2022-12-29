@@ -1,113 +1,71 @@
-<HTML><HEAD><TITLE>LDM-McIDAS FAQ</TITLE>
-<META NAME="BOOKMARK" CONTENT="LDM-McIDAS FAQ">
-<META NAME="AUTHOR" CONTENT="Unidata">
-<META NAME="KEYWORDS" CONTENT="">
-<META NAME="DESCRIPTION" CONTENT="">
-</HEAD><BODY>
-<H1 ALIGN="center">LDM-McIDAS:<br>Answer Page</H1>
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>LDM-McIDAS FAQs</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="BOOKMARK" content="LDM-McIDAS FAQs">
+    <meta name="AUTHOR" content="Unidata">
+  </head>
+  <body>
+    <p><small>
+    <a href="https://www.unidata.ucar.edu/software/mcidas/mcidd/index.html" target="_top">LDM-McIDAS Home Page</a> &gt;
+    <a href="index.html">Documentation</a> &gt;
+    LDM-McIDAS FAQs</small></p>
 
-<HR NOSHADE SIZE="2">
-<P>
+    <h1>LDM-McIDAS FAQs</h1>
+    <h2>String Searchable Email Archive</h2>
+    <p>Unidata archives all email inquiries regarding the LDM-McIDAS package. One of the quickest ways to solve
+      problems you may be having is to search this archive and see if others have had the same or similiar problems.
+      Use the dialogue box to enter the keyword(s) that relate to the problem you are having.</p>
+    <p>For example, if you received the following message while <b>make</b> was trying to compile <b>lwtoa3</b>:</p>
+    <pre>
+      ld: Undefined symbol
+    </pre>
+    <p>You could search the archive with the keyword sequence: <b>make lwtoa3</b>.  This would search all the messages
+      and return a list of those that contained both the words <b><i>make</i></b> followed by <b><i>lwtoa3</i></b>.</p>
+    <p>Multiple keywords will cause records containing the phrase to be returned.  Multiple keywords separated by commas
+      and no spaces will cause records containing any of the keywords to be returned.  Multiple keywords separated by
+      semi-colons will cause records containing the keywords to be returned.</p>
+    <p>In this example, after reading through the messages that contained those the phrase <b>make lwtoa3</b>, you would
+      most likely find that you need to build the McIDAS-X libraries before building the LDM-McIDAS decoders.</p>
+    <p>You can browse through replies to LDM-McIDAS questions sent to Unidata support through
+      <a href="https://www.unidata.ucar.edu/support/help/MailArchives/ldm-mcidas/">LDM-McIDAS Support</a></p>
 
-<h2>LDM-McIDAS Answers Page</h2>
+    <h2 id="FAQ">LDM-McIDAS FAQ List (under construction)</h2>
+    <p>Version 0.1<br>
+      Last Updated: <!--#echo var="LAST_MODIFIED" --></p>
+    <p>Welcome to the LDM-McIDAS Frequently Asked Questions (FAQ) list.  This list contains answers to common problems
+      encountered when using the LDM-McIDAS package.  A general description of the package and how to download, install
+      and configure the programs can be found by perusing the topics on the
+      <a href="https://www.unidata.ucar.edu/software/mcidas/mcidd/index.html">LDM-McIDAS Home Page</a>.</p>
 
-<a name=mail>
-<h3>String Searchable Email Archive</h3>
-</a>
+    <ol>
+      <li><a href=#10>General Information</a>
+        <ul>
+          <li><a href="#11">What is the LDM-McIDAS package?</a></li>
+          <li><a href="#12">Why would I want to use the LDM-McIDAS programs?</a></li>
+        </ul>
+      </li>
+      <li><a href=#20>Installation Questions</a></li>
+      <li><a href=#40>Using the decoders</a></li>
+    </ol>
 
-Unidata archives all email inquiries regarding the LDM-McIDAS package.
-One of the quickest ways to solve problems you may be having 
-is to search this archive and see if others have had the same or 
-similiar problems.  Use the dialogue box to enter the keyword(s) that relate
-to the problem you are having.<p>
+    <h2 id="10">General Information</h2>
+    <h3 id="11">What is the LDM-McIDAS package?</h3>
+    <p>LDM-McIDAS is a set of LDM-compatible programs for decoding the McIDAS products from the Unidata-Wisconsin
+      (McIDAS) data stream.  A detailed list of the functions of these programs can be found
+      <a href="ldm-mcidas-what.html">here</a>.</p>
 
-For example, if you received the following message while <b>make</b>
-was trying to compile <b>lwtoa3</b>:
+    <h3 id="12">Why would I want to use the LDM-McIDAS programs?</h3>
+    <p>The LDM-MCIDAS decoders are the easiest way to convert <b>f0</b> packetized products in the Unidata-Wisconsin
+      datastream into data files that are readily usable by McIDAS (and GEMPAK for imagery).</p>
 
-<pre>
-         ld: Undefined symbol
-</pre>
+    <h3 id="20">Installation Questions</h3>
+    <h3 id="40">Using the decoders</h3>
 
-you could search the archive with the keyword sequence: <b>make
-lwtoa3</b>.  This would search all the messages and return a list of
-those that contained both the words <b><em>make</em></b> followed by
-<b><em>lwtoa3</em></b>.<p>
-
-Multiple keywords will cause records containing the phrase to be
-returned.  Multiple keywords separated by commas and no spaces will
-cause records containing any of the keywords to be returned.  Multiple
-keywords separated by semi-colons will cause records containing all of
-the keywords to be returned.<p>
-
-In this example, after reading through the messages that contained
-those the phrase <b>make lwtoa3</b>, you would most likely find that
-you need to build the McIDAS-X libraries before building the LDM-McIDAS
-decoders.<p>
-
-You can browse through replies to LDM-McIDAS questions sent to Unidata
-support through <a href="https://www.unidata.ucar.edu/support/help/MailArchives/ldm-mcidas/">LDM-McIDAS Support</A>
-
-<a name=FAQ>
-<h3>LDM-McIDAS FAQ List (under construction)</h3>
-</a>
-
-Version 0.1<br>
-Last Updated: <!--#echo var="LAST_MODIFIED" -->
-<p>
-
-Welcome to the LDM-McIDAS Frequently Asked Questions (FAQ) list.  This list
-contains answers to common problems encountered when using the LDM-McIDAS
-package.  A general description of the package and how to download, install
-and configure the programs can be found by perusing the topics on the
-<a href="https://www.unidata.ucar.edu/software/mcidas/mcidd/index.html">LDM-McIDAS Home Page</a>.
-<hr>
-<h4>TOPICS</h4>
-<ul>
-  <li>1.0) <a href=#10>General Information </a><br>
-      1.1) <a href="#11">What is the LDM-McIDAS package? </a><br>
-      1.2) <a href="#12">Why would I want to use the LDM-McIDAS programs? </a><br>
-  <li>2.0) <a href=#20>Installation Questions </a>
-  <li>3.0) <a href=#40>Using the decoders. </a>
-</ul>
-<hr>
-<ul>
-<li><a name=10><b>1.0) General Information</b> </a><p>
-<a name=11>1.1) What is the LDM-McIDAS package?</a><p>
-LDM-McIDAS is a set of LDM-compatible programs for decoding
-the McIDAS products from the Unidata-Wisconsin (McIDAS) data stream.  
-A detailed list of the functions of these programs can be found
-<a href="ldm-mcidas-what.html">here</a>.<p>
-
-<a name=12>1.2) Why would I want to use the LDM-McIDAS programs?</a><p>
-The LDM-MCIDAS decoders are the easiest way to convert <b>f0</b> packetized
-products in the Unidata-Wisconsin datastream into data files that are
-readily usable by McIDAS (and GEMPAK for imagery).
-
-<li><a name=20><b>2.0) Installation Questions</b></a><p>
-<li><a name=40><b>3.0) Using the decoders</b></a><p>
-</ul>
-
-<HR>
-
-<P>
-<DIV>
-<CENTER>
-[<A HREF="https://www.unidata.ucar.edu/software/mcidas/mcidd/index.html">LDM-McIDAS Home</A>]
-</CENTER>
-</DIV>
-
-<P>
-<HR NOSHADE SIZE="2">
-
-Go to the <a href=https://www.unidata.ucar.edu/software/mcidas/index.html TARGET="_top">Unidata McIDAS-X
- Homepage.</a>
-<HR>
-
-<ADDRESS>
-Send questions/comments to <A HREF="mailto:support@unidata.ucar.edu">&lt;support
-@unidata.ucar.edu&gt;</A>.
-</ADDRESS>
-<script src="/js/ldm-mcidas_add_in.js" type="text/javascript"></script>
-
-</BODY>
-</HTML>
+    <p>Send questions/comments to <a href="mailto:support-ldm-mcidas@unidata.ucar.edu">&lt;support-ldm-mcidas
+      AT unidata.ucar.edu&gt;</a>.</p>
+    <script src="/js/ldm-mcidas_add_in.js" type="text/javascript"></script>
+  </body>
+</html>
