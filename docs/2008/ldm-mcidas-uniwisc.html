@@ -1,520 +1,380 @@
-<HTML>
-<HEAD>
-<TITLE>LDM-McIDAS Hot Topics</TITLE>
-<META NAME="BOOKMARK" CONTENT="LDM-McIDAS Unidata-Wisconsin Topics">
-<META NAME="AUTHOR" CONTENT="Unidata">
-<META NAME="KEYWORDS" CONTENT="">
-<META NAME="DESCRIPTION" CONTENT="">
-</HEAD>
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>LDM-McIDAS Unidata-Wisconsin Changes</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="BOOKMARK" content="LDM-McIDAS Unidata-Wisconsin Topics">
+    <meta name="AUTHOR" content="Unidata">
+  </head>
+  <body>
+    <p><small>
+    <a href="https://www.unidata.ucar.edu/software/mcidas/mcidd/index.html" target="_top">LDM-McIDAS Home Page</a> &gt;
+    <a href="index.html">Documentation</a> &gt;
+    <a href="ldm-mcidas-hottopics.html">Hot Topics</a> &gt;
+    LDM-McIDAS: Unidata-Wisconsin Changes</small></p>
 
-<BODY>
+    <h1>Unidata-Wisconsin Changes</h1>
+    <h2>Impending Unidata-Wisconsin datastream changes</h2>
+    <p>As announced in the summer of 2003, the contents of the Unidata-Wisconsin datastream are scheduled to be changed.
+      The full set of changes to be made is detailed in
+      <a href=https://www.unidata.ucar.edu/community/committees/users/prop.sat.06.03.html>
+        Proposed Unidata-Wisconsin Datastream Changes</a>.</p>
+    <p>The first portion of the changes are scheduled to be made at 18 UTC on Wednesday, January 7.  These changes will
+      include:</p>
+    <ul>
+      <li>the addition of Northern and Southern hemisphere Wildfire ABBA products from SSEC/CIMSS</li>
+      <li>an increase in the resolution of GOES-East Water Vapor images from 8 km to 4 km</li>
+      <li>the addition of short wavelength IR (3.9 um) images from GOES-East and GOES-West</li>
+      <li>the addition of long wavelength IR images from GOES-East (13.3 um) and GOES-West (12.0 um)</li>
+    </ul>
+    <p>A second change is scheduled to be made on Friday, January 9.  This change will consist of:</p>
+    <ul>
+      <li>an increase in broadcast frequency from once-per-hour to twice-per-hour for the GOES-East and West IR (3.9 um,
+        6.5/6.8 um, 10.7 um, and13.3/12.0 um) and VIS (0.65 um) images.</li>
+    </ul>
+    <p>A third change will occur in late January:</p>
 
-<H1 ALIGN="center">LDM-McIDAS:<br>Unidata-Wisconsin Changes</H1>
+    <ul>
+      <li>the expansion in geographical coverage of the GOES-East images to increase South America coverage whenever
+        southern GOES-East scans are available</li>
+    </ul>
 
-<HR NOSHADE SIZE="2">
-<p>
+    <h2>Things to consider to accommodate the Unidata-Wisconsin changes</h2>
+    <h3>Modify your LDM request for the Unidata-Wisconsin imagery</h3>
+    <p>The datastream changes will result in an increase in the number of products in the Unidata-Wisconsin datastream
+      and corresponding increase in the datastream volume and disk space needed to store the images.</p>
+    <p>You can choose to ingest all or a portion of the broadcast images by tailoring the data <b>request</b> line for
+      the <b>UNIWISC</b> (also known as <b>MCIDAS</b>) feed in your LDM's <b>ldmd.conf</b> file. To help you understand
+      how you can tailor the request to suit your needs, we offer the following:</p>
+    <p>Each <b>UNIWISC</b> IDD product has two fields that can be used to tailor data <b>request</b>s:</p>
+    <p><b>Q<i>n</i></b> - hour portion indicator (e.g., <b>Q0</b>, <b>Q1</b>, <b>Q2</b>, <b>Q3</b>, <b>Q4</b>)/<p>
+    <p><b>U<i>n</i></b> - McIDAS product routing code (e.g., <b>UB</b>, <b>U5</b>, <b>U9</b>, etc.)</p>
+    <p>Possible values for the hour portion indicator are as follows:</p>
+    <table class="simple">
+      <tr>
+        <td><b>Q0</b></td>
+        <td>image products or composites; the time associated with the product has hourly resolution</td>
+      </tr>
+      <tr>
+        <td><b>Q1</b></td>
+        <td>images whose time lies between H+00 and H+15</td>
+      </tr>
+      <tr>
+        <td><b>Q2</b></td>
+        <td>images whose time lies between H+15 and H+30</td>
+      </tr>
+      <tr>
+        <td><b>Q3</b></td>
+        <td>images whose time lies between H+30 and H+45</td>
+      </tr>
+      <tr>
+        <td><b>Q4</b></td>
+        <td>images whose time lies between H+45 and H+60</td>
+      </tr>
+    </table>
+    <p>McIDAS product code values for <b>UNIWISC</b> imagery are as follows (new products are highlighted in bold 
+      print):</p>
+    <table class="simple">
+      <tr>
+        <td>CA</td>
+        <td>CIMSS Cloud Top Pressure</td>
+      </tr>
+      <tr>
+        <td>CB</td>
+        <td>CIMSS Precipitable Water</td>
+      </tr>
+      <tr>
+        <td>CC</td>
+        <td>CIMSS Sea Surface Temperature</td>
+      </tr>
+      <tr>
+        <td>CD</td>
+        <td>CIMSS Lifted Index</td>
+      </tr>
+      <tr>
+        <td>CE</td>
+        <td>CIMSS CAPE</td>
+      </tr>
+      <tr>
+        <td>CF</td>
+        <td>CIMSS Ozone</td>
+      </tr>
+      <tr>
+        <td><b>CG</b></td>
+        <td><b>CIMSS Wildfire ABBA Nth Hemishere</b></td>
+      </tr>
+      <tr>
+        <td><b>CH</b></td>
+        <td><b>CIMSS Wildfire ABBA Sth Hemishere</b></td>
+      </tr>
+      <tr>
+        <td>U1</td>
+        <td>Antarctic composite</td>
+      </tr>
+      <tr>
+        <td>U3</td>
+        <td>Manually Digitized Radar</td>
+      </tr>
+      <tr>
+        <td>U5</td>
+        <td>GOES-W 10.7 um Infrared</td>
+      </tr>
+      <tr>
+        <td><b>U7</b></td>
+        <td><b>GOES-W  3.9 um Infrared</b></td>
+      </tr>
+      <tr>
+        <td><b>U8</b></td>
+        <td><b>GOES-W 12.0 um Infrared</b></td>
+      </tr>
+      <tr>
+        <td>U9</td>
+        <td>GOES-W 0.65 um Visible</td>
+      </tr>
+      <tr>
+        <td>UA</td>
+        <td>Educational floater I</td>
+      </tr>
+      <tr>
+        <td>UB</td>
+        <td>GOES-W  6.8 um Water Vapor</td>
+      </tr>
+      <tr>
+        <td>UC</td>
+        <td>Educational floater II</td>
+      </tr>
+      <tr>
+        <td><b>UD</b></td>
+        <td><b>GOES-E  3.9 um Infrared</b></td>
+      </tr>
+      <tr>
+        <td><b>UE</b></td>
+        <td><b>GOES-E 13.3 um CO2</b></td>
+      </tr>
+      <tr>
+        <td>UI</td>
+        <td>GOES-E 10.7 um Infrared</td>
+      </tr>
+      <tr>
+        <td>UR</td>
+        <td>Research floater</td>
+      </tr>
+      <tr>
+        <td>UV</td>
+        <td>GOES-E 0.65 um Visible</td>
+      </tr>
+      <tr>
+        <td>UW</td>
+        <td>GOES-E  6.5 um Water Vapor</td>
+      </tr>
+      <tr>
+        <td>UX</td>
+        <td>Global Mollweide Infrared Composite</td>
+      </tr>
+      <tr>
+        <td>UY</td>
+        <td>Global Mollweide Water Vapor Composite</td>
+      </tr>
+    </table>
+    <p>Some example <b>UNIWISC</b> headers:</p>
+    <pre>
+      pnga2area Q0 CA 1100 GOES-10_SND UNKBAND 14km 20040104 2300
+      pnga2area Q1 U1 191 GOES-9_IMG UNKBAND 4km 20040104 2100
+      pnga2area Q1 U3 205 GRAPHICS UNKBAND 5km 20040104 2359
+      pnga2area Q1 U9 120 GOES-10_IMG 0.65um 4km 20040105 0000
+      pnga2area Q1 U5 130 GOES-10_IMG 10.7um 4km 20040105 0000
+      pnga2area Q1 UB 170 GOES-10_IMG 6.8um 8km 20040105 0000
+      pnga2area Q0 CF 1150 GOES-10_SND UNKBAND 20km 20040104 2300
+      pnga2area Q1 UW 210 GOES-12_IMG 6.5um 8km 20040105 0015
+      pnga2area Q1 UV 140 GOES-12_IMG 0.65um 4km 20040105 0015
+      pnga2area Q1 UI 150 GOES-12_IMG 10.7um 4km 20040105 0015
+      pnga2area Q1 UA 160 GOES-12_IMG 10.7um 4km 20040105 0015
+      pnga2area Q1 UC 60 GOES-12_IMG 10.7um 4km 20040105 0015
+      pnga2area Q0 CB 1110 GOES-10_SND UNKBAND 14km 20040104 2300
+      pnga2area Q0 CD 1130 GOES-10_SND UNKBAND 14km 20040104 2300
+      pnga2area Q0 CE 1140 GOES-10_SND UNKBAND 14km 20040104 2300
+      pnga2area Q1 UX 100 GOES-8_IMG 10.7um 1km 20040105 0000
+      pnga2area Q1 UY 110 GOES-8_IMG 6.8um 1km 20040105 0000
+    </pre>
+    <p>Images in the datastream before the changes all have hour portion indicators of <b>Q0</b> or <b>Q1</b>.  When the
+     image broadcast frequency  increases to twice-per-hour, the new, half hourly images will all have an hour portion
+     indicator of <b>Q3</b>.  This coupled with the routing code values in the image headers is enough for to completely
+     tailor what you ingest.</p>
+    <p>The following are four possible ldmd.conf <b>request</b> lines. In all cases, <b>upstream.host.name</b> is the
+      name of the IDD host you receive UNIWISC images from.</p>
+    <ul>
+      <li>If you want to continue to just receive the <b>hourly</b> images that have been in the datastream before the 
+        changes and ignore new wavelength bands  (e.g., 3.9 um, 12.0 um, and 13.3 um), you should set your ldmd.conf
+        <b>request</b> to:
+        <pre>request	UNIWISC	"Q[01] (C[^GH]|U[^78DE])"	upstream.host.name</pre>
+      </li>
+      <li>If you want to receive the <b>half-hourly</b> images for the wavelength channels that have been in the
+        broadcast (i.e., ignore the new wavelength bands but get the more frequent images), you should set your
+        ldmd.conf <b>request</b> to:
+        <pre>request  UNIWISC "Q. (C[^GH]|U[^78DE])"       upstream.host.name</pre>
+      </li>
+      <li>If you want to ingest <b>hourly</b> images for all wavelength bands  (i.e., you do not want to get two of
+        each kind of image per hour), you should set your ldmd.conf <b>request</b> to:
+        <pre>request	UNIWISC	"Q[01]"	upstream.host.name</pre>
+      </li>
+      <li>If you want to request <b>all</b> <b>UNIWISC</b> images for all times, you should set your ldmd.conf
+        <b>request</b> to:
+        <pre>request	UNIWISC	".*"	upstream.host.name</pre>
+      </li>
+    </ul>
+    <p><b>NOTE:</b> anytime you modify your <b>ldmd.conf</b> file, you  must stop and restart your LDM for the changes to
+     become active.  To do so, login as <b>ldm</b>, and then type:</p>
+    <pre>
+      ldmadmin stop
+      ldmadmin start
+    </pre>
 
-<h2>Impending Unidata-Wisconsin datastream changes</h2>
-
-As announced in the summer of 2003, the contents of the Unidata-Wisconsin
-datastream are scheduled to be changed.  The full set of changes to be
-made is detailed in
-<a href=http://www.unidata.ucar.edu/community/committees/users/prop.sat.06.03.html> Proposed Unidata-Wisconsin Datastream Changes</a>.
-
-<p>
-The first portion of the changes are scheduled to be made at 18 UTC
-on Wednesday, January 7.  These changes will include:
-
-<ul>
-  <li> the addition of Northern and Southern hemisphere Wildfire ABBA
-       products from SSEC/CIMSS
-
-  <li> an increase in the resolution of GOES-East Water Vapor images from
-       8 km to 4 km
-
-  <li> the addition of short wavelength IR (3.9 um) images from GOES-East
-       and GOES-West
-
-  <li> the addition of long wavelength IR images from GOES-East (13.3 um) and
-       GOES-West (12.0 um)
-</ul>
-
-<p>
-A second change is scheduled to be made on Friday, January 9.  This
-change will consist of:
-
-<ul>
-<li> an increase in broadcast frequency from once-per-hour to twice-per-hour
-     for the GOES-East and West IR (3.9 um, 6.5/6.8 um, 10.7 um, and
-     13.3/12.0 um) and VIS (0.65 um) images
-</ul>
-
-A third change will occur in late January:
-
-<ul>
-<li> the expansion in geographical coverage of the
-     GOES-East images to increase South America coverage whenever southern
-     GOES-East scans are available
-</ul>
-
-<p>
-<h2>Things to consider to accommodate the Unidata-Wisconsin changes</h2>
-
-<h3>Modify your LDM request for the Unidata-Wisconsin imagery</h3>
-
-   The datastream changes will result in an increase in the number of
-   products in the Unidata-Wisconsin datastream and corresponding
-   increase in the datastream volume and disk space needed to store the
-   images.
-
-   <p>
-   You can choose to ingest all or a portion of the broadcast images by
-   tailoring the data <b>request</b> line for the <b>UNIWISC</b> (also
-   known as <b>MCIDAS</b>) feed in your LDM's <b>ldmd.conf</b> file.
-   To help you understand how you can tailor the request to suit your
-   needs, we offer the following:
-
-   <p>
-   Each <b>UNIWISC</b> IDD product has two fields that can be used to
-   tailor data <b>request</b>s:
-
-   <p>
-   <b>Q<em>n</em></b> - hour portion indicator (e.g., <b>Q0</b>, <b>Q1</b>, <b>Q2</b>, <b>Q3</b>, <b>Q4</b>)<p>
-   <b>U<em>n</em></b> - McIDAS product routing code (e.g., <b>UB</b>, <b>U5</b>, <b>U9</b>, etc.)
-
-   <p>
-   Possible values for the hour portion indicator are as follows:
-
-   <p>
-<table border=1 cellpadding=3>
-  <tr>
-     <td><b>Q0</b></td>
-     <td>image products or composites; the time associated with the product
-         has hourly resolution
-  </tr>
-  <tr>
-     <td><b>Q1</b></td>
-     <td>images whose time lies between H+00 and H+15
-  </tr>
-  <tr>
-     <td><b>Q2</b></td>
-     <td>images whose time lies between H+15 and H+30
-  </tr>
-  <tr>
-     <td><b>Q3</b></td>
-     <td>images whose time lies between H+30 and H+45
-  </tr>
-  <tr>
-     <td><b>Q4</b></td>
-     <td>images whose time lies between H+45 and H+60
-  </tr>
-</table>
-
-   <p>
-   McIDAS product code values for <b>UNIWISC</b> imagery are as follows
-   (new products are highlighted in bold print):
-
-   <p>
-<table border=1 cellpadding=3>
-  <tr>
-  <td>CA</td><td>CIMSS Cloud Top Pressure</td>
-  </tr>
-  <tr>
-  <td>CB</td><td>CIMSS Precipitable Water</td>
-  </tr>
-  <tr>
-  <td>CC</td><td>CIMSS Sea Surface Temperature</td>
-  </tr>
-  <tr>
-  <td>CD</td><td>CIMSS Lifted Index</td>
-  </tr>
-  <tr>
-  <td>CE</td><td>CIMSS CAPE</td>
-  </tr>
-  <tr>
-  <td>CF</td><td>CIMSS Ozone</td>
-  </tr>
-  <tr>
-  <td><b>CG</b></td><td><b>CIMSS Wildfire ABBA Nth Hemishere</b></td>
-  </tr>
-  <tr>
-  <td><b>CH</b></td><td><b>CIMSS Wildfire ABBA Sth Hemishere</b></td>
-  </tr>
-  <tr>
-  <td>U1</td><td>Antarctic composite</td>
-  </tr>
-  <tr>
-  <td>U3</td><td>Manually Digitized Radar</td>
-  </tr>
-  <tr>
-  <td>U5</td><td>GOES-W 10.7 um Infrared</td>
-  </tr>
-  <tr>
-  <td><b>U7</b></td><td><b>GOES-W  3.9 um Infrared</b></td>
-  </tr>
-  <tr>
-  <td><b>U8</b></td><td><b>GOES-W 12.0 um Infrared</b></td>
-  </tr>
-  <tr>
-  <td>U9</td><td>GOES-W 0.65 um Visible</td>
-  </tr>
-  <tr>
-  <td>UA</td><td>Educational floater I</td>
-  </tr>
-  <tr>
-  <td>UB</td><td>GOES-W  6.8 um Water Vapor</td>
-  </tr>
-  <tr>
-  <td>UC</td><td>Educational floater II</td>
-  </tr>
-  <tr>
-  <td><b>UD</b></td><td><b>GOES-E  3.9 um Infrared</b></td>
-  </tr>
-  <tr>
-  <td><b>UE</b></td><td><b>GOES-E 13.3 um CO2</b></td>
-  </tr>
-  <tr>
-  <td>UI</td><td>GOES-E 10.7 um Infrared</td>
-  </tr>
-  <tr>
-  <td>UR</td><td>Research floater</td>
-  </tr>
-  <tr>
-  <td>UV</td><td>GOES-E 0.65 um Visible</td>
-  </tr>
-  <tr>
-  <td>UW</td><td>GOES-E  6.5 um Water Vapor</td>
-  </tr>
-  <tr>
-  <td>UX</td><td>Global Mollweide Infrared Composite</td>
-  </tr>
-  <tr>
-  <td>UY</td><td>Global Mollweide Water Vapor Composite</td>
-  </tr>
-
-</table>
-
-   <p>
-   Some example <b>UNIWISC</b> headers:
-
-<pre>
-pnga2area Q0 CA 1100 GOES-10_SND UNKBAND 14km 20040104 2300
-pnga2area Q1 U1 191 GOES-9_IMG UNKBAND 4km 20040104 2100
-pnga2area Q1 U3 205 GRAPHICS UNKBAND 5km 20040104 2359
-pnga2area Q1 U9 120 GOES-10_IMG 0.65um 4km 20040105 0000
-pnga2area Q1 U5 130 GOES-10_IMG 10.7um 4km 20040105 0000
-pnga2area Q1 UB 170 GOES-10_IMG 6.8um 8km 20040105 0000
-pnga2area Q0 CF 1150 GOES-10_SND UNKBAND 20km 20040104 2300
-pnga2area Q1 UW 210 GOES-12_IMG 6.5um 8km 20040105 0015
-pnga2area Q1 UV 140 GOES-12_IMG 0.65um 4km 20040105 0015
-pnga2area Q1 UI 150 GOES-12_IMG 10.7um 4km 20040105 0015
-pnga2area Q1 UA 160 GOES-12_IMG 10.7um 4km 20040105 0015
-pnga2area Q1 UC 60 GOES-12_IMG 10.7um 4km 20040105 0015
-pnga2area Q0 CB 1110 GOES-10_SND UNKBAND 14km 20040104 2300
-pnga2area Q0 CD 1130 GOES-10_SND UNKBAND 14km 20040104 2300
-pnga2area Q0 CE 1140 GOES-10_SND UNKBAND 14km 20040104 2300
-pnga2area Q1 UX 100 GOES-8_IMG 10.7um 1km 20040105 0000
-pnga2area Q1 UY 110 GOES-8_IMG 6.8um 1km 20040105 0000
-</pre>
-
-   <p>
-   Images in the datastream before the changes all have hour portion
-   indicators of <b>Q0</b> or <b>Q1</b>.  When the image broadcast frequency
-   increases to twice-per-hour, the new, half hourly images
-   will all have an hour portion indicator of <b>Q3</b>.  This
-   coupled with the routing code values in the image headers
-   is enough for to completely tailor what you ingest.
-
-   <p>
-   The following are four possible ldmd.conf <b>request</b> lines. In all
-   cases, <b>upstream.host.name</b> is the
-   name of the IDD host you receive UNIWISC images from.
-
-   <p>
-   <ul>
-   <li> If you want to continue to just receive the <b>hourly</b> images
-   that have
-   been in the datastream before the changes and ignore new wavelength bands
-   (e.g., 3.9 um, 12.0 um, and 13.3 um), you should set your ldmd.conf
-   <b>request</b> to:
-
-   <p>
-   <tt>request	UNIWISC	"Q[01] (C[^GH]|U[^78DE])"	upstream.host.name</tt>
-
-   <p>
-   <li> If you want to receive the <b>half-hourly</b> images for the wavelength
-   channels that have been in the broadcast (i.e., ignore the new
-   wavelength bands but get the more frequent images), you should set
-   your ldmd.conf <b>request</b> to:
-
-   <p>
-   <tt>request  UNIWISC "Q. (C[^GH]|U[^78DE])"       upstream.host.name</tt>
-
-   <p>
-   <li> If you want to ingest <b>hourly</b> images for all wavelength bands
-   (i.e., you do not want to get two of each kind of image per hour),
-   you should set your ldmd.conf <b>request</b> to:
-
-   <p>
-   <tt>request	UNIWISC	"Q[01]"	upstream.host.name</tt>
-
-   <p>
-   <li> If you want to request <b>all</b> <b>UNIWISC</b> images for all times,
-   you should set your ldmd.conf <b>request</b> to:
-
-   <p>
-   <tt>request	UNIWISC	".*"	upstream.host.name</tt>
-   </ul>
-
-   <p>
-   <b>NOTE:</b> anytime you modify your <b>ldmd.conf</b> file, you 
-   must stop and restart your LDM for the changes to become active:
-
-<p>
-<pre>
-&lt;login as <b>ldm</b>&gt;
-ldmadmin stop
-ldmadmin start
-</pre>
-
-<h3>Modify the decoding of Unidata-Wisconsin imagery</h3>
-
-   If you decide that you want to continue to ingest just the hourly
-   imagery that is in the datastream before the changes (either of the
-   first two options above), and if your are currently decoding that
-   imagery with no problems, you need do nothing.
-
-   <p>
-   If you decide that you want the new wavelength band images, then
-   you will most likely need to adjust the <b>pnga2area</b> decode
-   entries in your LDM's <b>pqact.conf</b> file.  There are two 
-   possibilities:
-
-   <p>
-   <ol>
-      <li> you use the McIDAS routing table approach to decoding
-          images.
-
-          <p>
-          In this case, you will need to add new entries to
-          your McIDAS routing table.  This is done by the user <b>mcidas</b>:
-
-<pre>
-&lt;login as <b>mcidas</b>&gt;
-cd workdata
-ftp ftp.unidata.ucar.edu
-  &lt;user&gt; anonymous
-  &lt;pass&gt; your_full_email_address
-  binary
-  cd pub/mcidas/data
-  get UPRTE.BAT
-  quit
-batch.k UPRTE.BAT
-</pre>
-
-          <p>
-          <b>NOTE:</b> This assumes that you have a McIDAS <b>REDIRECT</b>ion
-          for the copy of <b>ROUTE.SYS</b> that is located in the
-          directory in which you decode LDM-MCIDAS imagery.
-
-      <li> you use <b>pnga2area</b> entries in your LDM's <b>pqact.conf</b> 
-          file that write files into a directory hierarchy that is required
-          by GEMPAK or used by McIDAS.
-
-          <p>
-          In this case, you need to:
-
-          <p>
+    <h3>Modify the decoding of Unidata-Wisconsin imagery</h3>
+    <p>If you decide that you want to continue to ingest just the hourly  imagery that is in the datastream before the
+      changes (either of the first two options above), and if you are currently decoding that imagery with no problems,
+      you need do nothing.</p>
+    <p>If you decide that you want the new wavelength band images, then you will most likely need to adjust the
+      <b>pnga2area</b> decode entries in your LDM's <b>pqact.conf</b> file.  There are two  possibilities:</p>
+    <ol>
+      <li>you use the McIDAS routing table approach to decoding images.
+        <p>In this case, you will need to add new entries to your McIDAS routing table.  This is done by the user
+          <b>mcidas</b>.  Type the following:</p>
+        <pre>
+          cd workdata
+          ftp ftp.unidata.ucar.edu
+          &lt;user&gt; anonymous
+          &lt;pass&gt; your_full_email_address
+          binary
+          cd pub/mcidas/data
+          get UPRTE.BAT
+          quit
+          batch.k UPRTE.BAT
+        </pre>
+        <p><b>NOTE:</b> This assumes that you have a McIDAS <b>REDIRECT</b>ion for the copy of <b>ROUTE.SYS</b> that is
+          located in the  directory in which you decode LDM-MCIDAS imagery.</p>
+      </li>
+      <li>You use <b>pnga2area</b> entries in your LDM's <b>pqact.conf</b> file that write files into a directory
+        hierarchy that is required by GEMPAK or used by McIDAS.  In this case, you need to:
           <ul>
-          <li> incorporate new <b>pnga2area</b> entries from
-          <a href=ldm-mcidas-pqact.conf.all.html>ldm-mcidas-pqact.conf.all</a>
-          into your <b>pqact.conf</b> file
-
-          <li> check your modified <b>pqact.conf</b> file for integrity by
-          running <b>ldmadmin pqactcheck</b> correcting any errors that
-          may have been found
-
-          <li>tell the LDM <b>pqact</b> application to
-          reread <b>pqact.conf</b> using <b>ldmadmin pqactHUP</b>.
+            <li>incorporate new <b>pnga2area</b> entries from
+              <a href=ldm-mcidas-pqact.conf.all.html>ldm-mcidas-pqact.conf.all</a> into your <b>pqact.conf</b> file;</li>
+            <li>check your modified <b>pqact.conf</b> file for integrity by running <b>ldmadmin pqactcheck</b>
+              correcting any errors that may have been found;</li>
+            <li>tell the LDM <b>pqact</b> application to reread <b>pqact.conf</b> using <b>ldmadmin pqactHUP</b>.
           </ul>
+          <p><b>NOTE:</b> An FTP-able copy of <b>ldm-mcidas-pqact.conf.all</b>  can be found
+            in the pub/ldm-mcidas/pqact directory of anonymous FTP on the Unidata FTP server (ftp.unidata.ucar.edu).
+            Login as the <b>ldm</b> user, and then type:</p>
+          <pre>
+            cd etc
+            ftp ftp.unidata.ucar.edu
+            &lt;user&gt; anonymous
+            &lt;pass&gt; your_full_email_address
+            binary
+            cd pub/ldm-mcidas/pqact
+            get ldm-mcidas-pqact.conf.all
+            quit
+          </pre>
+      </li>
+    </ol>
 
-          <p>
-          <b>NOTE:</b> An FTPable copy of <b>ldm-mcidas-pqact.conf.all</b>
-          can be found
-          in the pub/ldm-mcidas/pqact directory of anonymous FTP on the Unidata
-          FTP server, ftp.unidata.ucar.edu:
+    <h3>Modify your procedures for scouring data</h3>
+    <p>If you are only using the McIDAS routing table approach for decoding <b>UNIWISC</b> imagery, you should not need
+      alter your image scouring procedures.</p>
+    <p>If you have been using the directory hierarchy decoding method offered by the <b>pnga2area</b>, you should not
+      need to alter your image scouring procedures (assuming that your data scouring is currently working
+      correctly).</p>
+    <p>If you switch from the McIDAS routing table to the directory hierarchy approach for decoding <b>UNIWISC</b>
+      imagery (and this is what we recommend), you will need to establish new procedures for scouring imagery from your
+      system. We have made an FTPable C-shell script that you can use to scour <b>UNIWISC</b> images ingested into a
+      directory hierarchy.  FTP this file to a directory in the <b>PATH</b> defined for your <b>ldm</b> user.  Type the
+      following:</p>
+    <pre>
+      cd util             &lt;- for example
+      ftp ftp.unidata.ucar.edu
+      &lt;user&gt; anonymous
+      &lt;pass&gt; your_full_email_address
+      cd pub/ldm/scour
+      binary
+      get prune_images.csh
+      quit
+      chmod +x prune_images.csh
+    </pre>
+    <p>You will need to edit <b>prune_images.csh</b> to set several items to match your LDM setup:</p>
+    <ul>
+      <li><b>PATH</b> - insure that the directory containing <b>prune_images.csh</b> is in PATH</li>
+      <li><b>KEEP</b> - set the number of images you want to keep (same for all bands)</li>
+      <li><b>areadir</b> - set to the directory under which all images/image subdirectories are found</li>
+    </ul>
+    <p>After <b>prune_images.csh</b> is properly configured AND set to be executable, you will need to add a crontab
+      entry to run the script at least once-per-hour.  Here is an example entry that is used here at the Unidata Program
+      Center:</p>
+    <pre>15 * * * * util/prune_images.csh > /dev/null 2>&1</pre>
+      <p><b>NOTE:</b> this entry assumes that <b>prune_images.csh</b> was copied to the <b>~ldm/util</b> directory.</p>
 
-<pre>
-&lt;login as <b>ldm</b>&gt;
-cd etc
-ftp ftp.unidata.ucar.edu
-  &lt;user&gt; anonymous
-  &lt;pass&gt; your_full_email_address
-  binary
-  cd pub/ldm-mcidas/pqact
-  get ldm-mcidas-pqact.conf.all
-  quit
-</pre>
+    <h3>Modify McIDAS ADDE serving of the data you ingest (McIDAS users only)</h3>
+    <p>If you run McIDAS, you will want to update your ADDE setup to be able to serve the new images you ingest.  How
+      you do this depends on how you are decoding the <b>UNIWISC</b> images.  In both cases, we have provided new ADDE
+      data serving template BATCH files that you should FTP and use to update your ADDE setup.</p>
+    <ol>
+      <li>You use the McIDAS routing table approach to decoding images.  In this case, download  the file
+        <b>DSSERVEOLD.BAT</b> to the <b>~mcidas/data</b> directory.  Login as the <b>mcidas</b> user, then type:
+        <pre>
+          cd ~mcidas/data
+          ftp ftp.unidata.ucar.edu
+          &lt;user&gt; anonymous
+          &lt;pass&gt; your_full_email_address
+          cd pub/mcidas/data
+          binary
+          get DSSERVEOLD.BAT
+          quit
+        </pre>
+      </li>
+      <li>You use <b>pnga2area</b> entries in your LDM's <b>pqact.conf</b> file that write files in to a directory
+        hierarchy that is needed by GEMPAK or used by McIDAS. In this case, download  the file <b>DSSERVE.BAT</b> to
+        the <b>~mcidas/data</b> directory.Login as the <b>mcidas</b> user, then type:
+        <pre>
+          cd ~mcidas/data
+          ftp ftp.unidata.ucar.edu
+          &lt;user&gt; anonymous
+          &lt;pass&gt; your_full_email_address
+          cd pub/mcidas/data
+          binary
+          get DSSERVE.BAT
+          quit
+        </pre>
+      </li>
+    </ol>
+    <p>In both cases, use the file you just downloaded to create a new <b>LSSERVE.BAT</b> adjusting entries to match how
+      you are decoding the <b>UNIWISC</b> imagery:</p>
+    <pre>
+      cp LSSERVE.BAT LSSERVE.BAT.bak
+      cp DSSERVEOLD.BAT LSSERVE.BAT
+        - or -
+      cp DSSERVE.BAT LSSERVE.BAT
+    </pre>
+    <p>Then edit LSSERVE.BAT and set entries to match your decoding setup&gt.</p>
+    <p><b>IMPORTANT:</b> make sure that you include any changes you made in your previous version of <b>LSSERVE.BAT</b>
+      into the new copy!</p>
+    <p>After making the changes to <b>LSSERVE.BAT</b>, make the changes active for McIDAS ADDE serving:</p>
+    <pre>
+      cd ~mcidas/workdata
+      batch.k LSSERVE.BAT
+    </pre>
+    <p>After running <b>batch.k LSSERVE.BAT</b>, make sure that you can access the new imagery:</p>
+    <pre>
+      dsinfo.k IMAGE CIMSS
+      dsinfo.k IMAGE RTIMAGES
 
-   </ol>
+      imglist.k RTIMAGES/GE-39
+      imglist.k RTIMAGES/GE-CO2
+      imglist.k RTIMAGES/GW-39
+      imglist.k RTIMAGES/GW-12
+    </pre>
 
-<h3>Modify your procedures for scouring data</h3>
-
-If you are only using the McIDAS routing table approach for decoding
-<b>UNIWISC</b> imagery, you should not need alter your image scouring
-procedures.
-
-<p>
-If you have been using the directory hierarchy decoding method offered
-by the <b>pnga2area</b>, you should not need to alter your image scouring
-procedures (assuming that your data scouring is currently working correctly).
-
-<p>
-If you switch from the McIDAS routing table to the directory
-hierarchy approach for decoding <b>UNIWISC</b> imagery (and this is
-what we recommend), you will need
-to establish new procedures for scouring imagery from your system.
-We have made an FTPable C-shell script that you can use to scour
-<b>UNIWISC</b> images ingested into a directory hierarchy.  FTP this
-file to a directory in the <b>PATH</b> defined for your <b>ldm</b>
-user:
-
-<p>
-<pre>
-&lt;login as <b>ldm</b>&gt;
-cd util             &lt;- for example
-ftp ftp.unidata.ucar.edu
-  &lt;user&gt; anonymous
-  &lt;pass&gt; your_full_email_address
-  cd pub/ldm/scour
-  binary
-  get prune_images.csh
-  quit
-chmod +x prune_images.csh
-</pre>
-
-<p>
-You will need to edit <b>prune_images.csh</b> to set several items
-to match your LDM setup:
-
-<p>
-<b>PATH</b> - insure that the directory containing <b>prune_images.csh</b> is in PATH<br>
-<b>KEEP</b> - set the number of images you want to keep (same for all bands)<br>
-<b>areadir</b> - set to the directory under which all images/image subdirectories are found<br>
-
-<p>
-After <b>prune_images.csh</b> is properly configured AND set to be
-executable, you will need to add a crontab entry to run the script at
-least once-per-hour.  Here is an example entry that is used here at the
-Unidata Program Center:
-
-<p>
-<tt>15 * * * * util/prune_images.csh > /dev/null 2>&1</tt>
-
-<p>
-<b>NOTE:</b> this entry assumes that <b>prune_images.csh</b> was copied
-to the <b>~ldm/util</b> directory.
-
-<h3>Modify McIDAS ADDE serving of the data you ingest (McIDAS users only)</h3>
-
-If you run McIDAS, you will want to update your ADDE setup to be able
-to serve the new images you ingest.  How you do this depends on how
-you are decoding the <b>UNIWISC</b> images.  In both cases, we have
-provided new ADDE data serving template BATCH files that you should
-FTP and use to update your ADDE setup.
-
-<ol>
-   <li> you use the McIDAS routing table approach to decoding images.
-
-        In this case, download  the file <b>DSSERVEOLD.BAT</b> to
-        the <b>~mcidas/data</b> directory:
-
-<p>
-<pre>
-&lt;login as <b>mcidas</b>&gt;
-cd ~mcidas/data
-ftp ftp.unidata.ucar.edu
-  &lt;user&gt; anonymous
-  &lt;pass&gt; your_full_email_address
-  cd pub/mcidas/data
-  binary
-  get DSSERVEOLD.BAT
-  quit
-</pre>
-
-   <li> you use <b>pnga2area</b> entries in your LDM's <b>pqact.conf</b> 
-        file that write files in to a directory hierarchy that is needed
-        by GEMPAK or used by McIDAS.
-
-        <p>
-        In this case, download  the file <b>DSSERVE.BAT</b> to
-        the <b>~mcidas/data</b> directory:
-
-<p>
-<pre>
-&lt;login as <b>mcidas</b>&gt;
-cd ~mcidas/data
-ftp ftp.unidata.ucar.edu
-  &lt;user&gt; anonymous
-  &lt;pass&gt; your_full_email_address
-  cd pub/mcidas/data
-  binary
-  get DSSERVE.BAT
-  quit
-</pre>
-
-</ol>
-
-In both cases, use the file you just downloaded to create a new
-<b>LSSERVE.BAT</b> adjusting entries to match how you are decoding
-the <b>UNIWISC</b> imagery:
-
-<pre>
-cp LSSERVE.BAT LSSERVE.BAT.bak
-
-cp DSSERVEOLD.BAT LSSERVE.BAT
-  - or -
-cp DSSERVE.BAT LSSERVE.BAT
-
-&lt;edit LSSERVE.BAT and set entries to match your decoding setup&gt;
-</pre>
-
-<p>
-<b>IMPORTANT:</b> make sure that you include any changes you made in your
-previous version of <b>LSSERVE.BAT</b> into the new copy!
-
-<p>
-After making the changes to <b>LSSERVE.BAT</b>, make the changes active
-for McIDAS ADDE serving:
-
-<pre>
-cd ~mcidas/workdata
-batch.k LSSERVE.BAT
-</pre>
-
-<p>
-After running <b>batch.k LSSERVE.BAT</b>, make sure that you can access
-the new imagery:
-
-<p>
-<pre>
-dsinfo.k IMAGE CIMSS
-dsinfo.k IMAGE RTIMAGES
-
-imglist.k RTIMAGES/GE-39
-imglist.k RTIMAGES/GE-CO2
-imglist.k RTIMAGES/GW-39
-imglist.k RTIMAGES/GW-12
-</pre>
-
-<p>
-<HR>
-
-<p>
-<ADDRESS>
-Send questions/comments to <A HREF="mailto:support@unidata.ucar.edu">&lt;support@unidata.ucar.edu&gt;</A>.
-</ADDRESS>
-<script src="/js/ldm-mcidas_add_in.js" type="text/javascript"></script>
-
-</BODY>
-</HTML>
+    <p>Send questions/comments to <a href="mailto:support-ldm-mcidas@unidata.ucar.edu">&lt;support-ldm-mcidas
+      AT unidata.ucar.edu&gt;</a>.</p>
+    <script src="/js/ldm-mcidas_add_in.js" type="text/javascript"></script>
+  </body>
+</html>
