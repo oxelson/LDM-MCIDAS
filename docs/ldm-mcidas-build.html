@@ -8,18 +8,13 @@
     <meta name="AUTHOR" content="Unidata">
   </head>
   <body>
-  <p><small>
-    <a href="https://www.unidata.ucar.edu/software/mcidas/mcidd/index.html" target="_top">LDM-McIDAS Home Page</a> &gt;
-    <a href="index.html">Documentation</a> &gt;
-    LDM-McIDAS: Building and Installing</small></p>
-
-    <h1>Building and Installing the LDM-McIDAS decoders</h1>
+    <h2>Building and Installing the LDM-McIDAS Decoders</h2>
     <p>If there is no binary distribution that will work on your machine, you will need to build the LDM-McIDAS decoders
       from source.</p>
     <p>After you download the source distribution of the LDM-McIDAS package, you need to move it to a suitable location,
       compile, test, and install the software.</p>
 
-    <h2>Table of Contents</h2>
+    <h3>Table of Contents</h3>
     <ul>
       <li><a href=#where>Where to Install the Software</a></li>
       <li><a href=#consider>What to do Before Compiling</a></li>
@@ -28,7 +23,7 @@
       <li><a href=#other>Diagnosing Problems and Other Installation Notes</a></li>
     </ul>
 
-    <h2 id="where">Where to Install the Software</h2>
+    <h3 id="where">Where to Install the Software</h3>
     <p>Like all Unidata packages, LDM-McIDAS is distributed as a separate package, and you can build and install it any
       place you like on the machine that is running the <b>LDM</b> so long as the user running the <b>LDM</b> has
       access to and execute privilege for its decoders.</p>
@@ -145,7 +140,7 @@
     <p>If you are working with a binary distribution, you can proceed to the
       <a href=#install>Installing the Software</a> section.</p>
 
-    <h2 id="consider">What to do Before Compiling</h2>
+    <h3 id="consider">What to do Before Compiling</h3>
     <ol>
       <li><b>Defining Environment Variables</b>
       <p>LDM-McIDAS uses the <b><i>configure</i></b> utility to create C header and compilation Makefile files.  The
@@ -276,7 +271,7 @@
       </li>
     </ol>
 
-    <h2 id="compile">Compiling the Software</h2>
+    <h3 id="compile">Compiling the Software</h3>
     <p>Once <b><i>configure</i></b> has run, and assuming it ran with no errors, you use <b>make</b> to compile, test
       and install the LDM-McIDAS package.</p>
     <p>There are 3 steps in the <b>make</b> process:</p>
@@ -307,7 +302,7 @@
       output to a log file.  If there are problems, and you can't figure out what is wrong, you can mail the log file
       to <a href="mailto:support-ldm-mcidas@unidata.ucar.edu">&lt;support-ldm-mcidas AT unidata.ucar.edu&gt;</a>.</p>
 
-    <h2 id="install">Installing the Software</h2>
+    <h3 id="install">Installing the Software</h3>
     <p>At this point, you could use the LDM-McIDAS decoders from the directory you just installed them in:
       <b>~ldm/ldm-mcidas/ldm-mcidas-200x/bin</b>.  We recommend, however, that you copy them to the either the
       <b>~ldm/decoders</b> or <b>~ldm/util</b> directory and use them from there.  Which directory you copy them to
@@ -351,7 +346,7 @@
       <b>cp SCHEMA ~ldm/data/mcidas</b>
     </pre>
 
-    <h2 id="other">Diagnosing problems and other considerations</h2>
+    <h3 id="other">Diagnosing problems and other considerations</h3>
     <p>If an error occurs during the <b><i>configure</i></b> or <b>make</b> process, you can try to diagnose the problem
       by looking at the file <b>config.status</b> or by looking at the <b>make</b> log file.</p>
     <p>If you are unable to figure out what is wrong, send a message to
@@ -373,8 +368,6 @@
     <p>[<a href="ldm-mcidas-what.html">Previous: Download</a>]
     [<a href="ldm-mcidas-use.html">Next: Using the Decoders</a>]</p>
 
-   <p>Send questions/comments to <a href="mailto:support-ldm-mcidas@unidata.ucar.edu">&lt;support-ldm-mcidas
-    AT unidata.ucar.edu&gt;</a>.</p>
     <script src="/js/ldm-mcidas_add_in.js" type="text/javascript"></script>
   </body>
 </html>
