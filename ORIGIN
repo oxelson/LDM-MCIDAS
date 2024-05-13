@@ -1,5 +1,4 @@
-Anonymous FTP:
+HTTP:
 
-	host:      ftp.unidata.ucar.edu [128.117.149.64]
-	directory: pub/ldm-mcidas
+	host:      https://downloads.unidata.ucar.edu/ldm-mcidas/
 	file:      ldm-mcidas-<version>.tar.gz
